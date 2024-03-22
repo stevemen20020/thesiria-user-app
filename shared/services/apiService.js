@@ -1,0 +1,59 @@
+class ApiService {
+
+  //-------------------------------------------------------//
+  //------------------GLOBAL VARIABLES---------------------//
+  //-------------------------------------------------------//
+
+  URL = `${process.env.EXPO_PUBLIC_API_DEVELOPMENT}${process.env.EXPO_PUBLIC_API_VERSION_1}`
+
+  endpoints = {
+    playable_character:'playable_character',
+    mission_journal:'mission_journal',
+    mission_fases: 'mission_fases',
+    missions: 'missions',
+    playable_character_journal: 'playable_character_journal',
+    npc:'npc',
+  }
+
+  //-------------------------------------------------------//
+  //--------------COMMO METHODS----------------------------//
+  //-------------------------------------------------------//
+
+  //-------------------------------------------------------//
+  //--------------FUNCTIONS FOR AUTH-----------------------//
+  //-------------------------------------------------------//
+
+  //-------------------------------------------------------//
+  //--------------FUNCTIONS FOR JOURNAL--------------------//
+  //-------------------------------------------------------//
+
+  getMissionJournalByPlayerId = async(playable_character_id) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.mission_journal}?playable_character_id=${playable_character_id}`, {
+        method: 'GET'
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch ( error ) {
+      return error;
+    }
+  }
+
+  getMissionJournalById = async(id_mission_journal) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.mission_journal}/${id_mission_journal}`, {
+        method: 'GET'
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch ( error ) {
+      return error;
+    }
+  }
+}
+
+export default ApiService
