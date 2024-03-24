@@ -13,6 +13,7 @@ class ApiService {
     missions: 'missions',
     playable_character_journal: 'playable_character_journal',
     npc:'npc',
+    playable_character_journal:'playable_character_journal'
   }
 
   //-------------------------------------------------------//
@@ -44,6 +45,34 @@ class ApiService {
   getMissionJournalById = async(id_mission_journal) => {
     try {
       const response = await fetch(`${this.URL}${this.endpoints.mission_journal}/${id_mission_journal}`, {
+        method: 'GET'
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch ( error ) {
+      return error;
+    }
+  }
+
+  getNPCJournalByPlayerId = async(playable_character_id) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.playable_character_journal}?playable_character_id=${playable_character_id}`, {
+        method: 'GET'
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch ( error ) {
+      return error;
+    }
+  }
+
+  getNPCJournalById = async(id_npc_journal) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.playable_character_journal}/${id_npc_journal}`, {
         method: 'GET'
       })
       if (!response.ok) {

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import { useLocalSearchParams } from 'expo-router'
 import ApiService from '../shared/services/apiService'
 import Animated, { useDerivedValue, useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
-import RainbowText from 'react-rainbow-text';
 
 const DetailMission = () => {
   const [missionJournal, setMissionJournal] = useState(null)

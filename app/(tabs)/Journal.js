@@ -11,7 +11,7 @@ const Journal = () => {
   }
 
   const handlePushCharacters = () => {
-    console.log('Yendo a personajes')
+    router.push('/CharacterMission')
   }
 
   return (

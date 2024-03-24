@@ -3,32 +3,33 @@ import { useState, useEffect } from 'react'
 import ApiService from '../shared/services/apiService'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { AntDesign } from '@expo/vector-icons';
 
-const JournalMission = () => {
-  const [myMissions, setMyMissions] = useState(null)
+const CharacterMission = () => {
+  const [myNPC, setMyNPC] = useState(null)
   const [refreshing, setRefreshing] = useState(false);
 
   const apiService = new ApiService
 
   useEffect(() => {
-    const fetchMissions = async () => {
-      const response = await apiService.getMissionJournalByPlayerId(3)
-      setMyMissions(response.result)
+    const fetchCharacterRelationships = async () => {
+      const response = await apiService.getNPCJournalByPlayerId(3)
+      setMyNPC(response.result)
     }
 
-    fetchMissions()
+    fetchCharacterRelationships()
     .catch( error => console.error(error))
   },[])
 
-  const fetchMissionsOutside = async () => {
-    const response = await apiService.getMissionJournalByPlayerId(3)
-    setMyMissions(response.result)
+  const fetchCharacterRelationshipsOutside = async () => {
+    const response = await apiService.getNPCJournalByPlayerId(3)
+    setMyNPC(response.result)
   }
 
   const handleRefresh = async () => {
     setRefreshing(true);
 
-    await fetchMissionsOutside()
+    await fetchCharacterRelationshipsOutside()
     .catch( error => {
       console.error(error)
       setRefreshing(false);
@@ -37,32 +38,40 @@ const JournalMission = () => {
     setRefreshing(false);
   };
 
-  const handleGoToMission = (mission) => {
+  const handleGoToMission = (npc) => {
     router.push({
-      pathname: '/DetailMission',
-      params:{mission:mission.id}
+      pathname: '/DetailCharacter',
+      params:{npc:npc.id}
     })
+  }
+
+  const generateHearts = (heartNum) => {
+    let hearts = []
+    for(let heart = 0; heart < 10; heart++) {
+      if(heart <= heartNum) hearts.push(<AntDesign name="heart" size={24} color="#e31809" key={heart}/>)
+      else hearts.push(<AntDesign name="hearto" size={24} color="#e31809" key={heart}/>)
+    }
+    return hearts
   }
 
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <Text style={styles.title}>Mis misiones</Text>
-        {myMissions !== null && (
+        <Text style={styles.title}>Mis relaciones</Text>
+        {myNPC !== null && (
           <FlatList
-            data={myMissions}
+            data={myNPC}
             renderItem={({ item }) => (
               <View style={styles.itemList}>
                 <Image
                   style={styles.image}
-                  source={{ uri: item.missions.npc.image_reference}}
+                  source={{ uri: item.npc.image_reference}}
                 />
-                <View style={styles.info}>
-                  <Text style={styles.missionTitle} numberOfLines={1}>{item.missions.name}</Text>
-                  <Text style={styles.missionDescription} numberOfLines={2}>{item.missions.description}</Text>
+                <View style={styles.heartContainer}>
+                  {generateHearts(item.relationship)}
                 </View>
                 <TouchableOpacity style={{ flex: 1 }} onPress={() => handleGoToMission(item)}>
-                  <MaterialCommunityIcons name="book-search-outline" size={30} color="black" />
+                  <MaterialCommunityIcons name="cards-playing-heart-outline" size={38} color="black" />
                 </TouchableOpacity>
               </View>
             )}
@@ -73,7 +82,7 @@ const JournalMission = () => {
         )}
       </View>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -113,7 +122,12 @@ const styles = StyleSheet.create({
   image:{
     height:60,
     width:60
+  },
+  heartContainer: {
+    flex:7,
+    display:'flex',
+    flexDirection:'row'
   }
 });
 
-export default JournalMission
+export default CharacterMission
