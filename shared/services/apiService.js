@@ -4,7 +4,8 @@ class ApiService {
   //------------------GLOBAL VARIABLES---------------------//
   //-------------------------------------------------------//
 
-  URL = `${process.env.EXPO_PUBLIC_API_DEVELOPMENT}${process.env.EXPO_PUBLIC_API_VERSION_1}`
+  // URL = `${process.env.EXPO_PUBLIC_API_DEVELOPMENT}${process.env.EXPO_PUBLIC_API_VERSION_1}`
+  URL = `${process.env.EXPO_PUBLIC_API_PRODUCTION}${process.env.EXPO_PUBLIC_API_VERSION_1}`
 
   endpoints = {
     playable_character:'playable_character',

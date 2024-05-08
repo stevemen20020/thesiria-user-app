@@ -1,11 +1,12 @@
-import React from 'react'
+import { useState } from 'react';
 import { Tabs } from 'expo-router'
 import { Entypo } from '@expo/vector-icons';
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Modal, Text } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
 
 const screenOptions= {
     tabBarShowLabel: false,
@@ -25,12 +26,35 @@ const screenOptions= {
 }
 
 const CustomButton = ({ onPress }) => (
-  <TouchableOpacity onPress={() => console.log('modal')} style={styles.customButton}>
+  <TouchableOpacity onPress={onPress} style={styles.customButton}>
     <FontAwesome5 name="dice-d20" size={34} color="black" />
   </TouchableOpacity>
 );
 
 const _layout = () => {
+  const [modalVisible, setModalVisible] = useState(true);
+  const [rolledNumber, setRolledNumber] = useState(20)
+  const [selectedValue, setSelectedValue] = useState('');
+  const [shuffleInterval, setShuffleInterval] = useState(null);
+
+  const generateNumber = () => {
+    const randomNumber = Math.floor(Math.random() * 20) + 1;
+    setRolledNumber(randomNumber);
+  };
+
+  const startShuffle = () => {
+    const interval = setInterval(() => {
+      const randomNumber = Math.floor(Math.random() * 20) + 1;
+      setRolledNumber(randomNumber);
+    }, 100); // Adjust the interval for speed
+    setShuffleInterval(interval);
+  };
+
+  const stopShuffle = () => {
+    clearInterval(shuffleInterval);
+    setShuffleInterval(null);
+  };
+  
   return (
     <>
       <Tabs screenOptions={screenOptions}>
@@ -85,24 +109,117 @@ const _layout = () => {
         }}
         />
       </Tabs>
-      <CustomButton/>
+      <CustomButton onPress={() => setModalVisible(true)}/>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <FontAwesome5 name="dice-d20" size={150} color="#a0a474" style={styles.dice}/>
+            <Text style={styles.roll}>{rolledNumber}</Text>
+            <Picker
+              selectedValue={selectedValue}
+              style={styles.picker}
+              onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+              mode='dropdown'
+            >
+              <Picker.Item label="Selecciona una habilidad" value="-1" style={styles.pickerItem}/>
+              <Picker.Item label="Fuerza" value="1" style={styles.pickerItem}/>
+              <Picker.Item label="Destreza" value="2" style={styles.pickerItem}/>
+              <Picker.Item label="Defensa" value="3" style={styles.pickerItem}/>
+              <Picker.Item label="Puntería" value="4" style={styles.pickerItem}/>
+              <Picker.Item label="Visión" value="5" style={styles.pickerItem}/>
+              <Picker.Item label="Velocidad" value="6" style={styles.pickerItem}/>
+              <Picker.Item label="Manitas" value="7" style={styles.pickerItem}/>
+              <Picker.Item label="Agilidad" value="8" style={styles.pickerItem}/>
+              <Picker.Item label="Carisma" value="9" style={styles.pickerItem}/>
+              <Picker.Item label="Inteligencia" value="10" style={styles.pickerItem}/>
+              <Picker.Item label="Sabiduría" value="11" style={styles.pickerItem}/>
+            </Picker>
+            <TouchableOpacity style={styles.buttonTirar} onPress={generateNumber} onLongPress={startShuffle} onPressOut={stopShuffle}>
+              <Text style={styles.textTirar}>T I R A R</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+              <AntDesign name="close" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </>
   )
 }
 
 const styles = StyleSheet.create({
   customButton: {
-      position: 'absolute',
-      bottom: 50,
-      alignSelf: 'center',
-      backgroundColor: '#d0e1d3',
-      width: 65,
-      height: 65,
-      borderRadius: 60,
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 999,
+    position: 'absolute',
+    bottom: 50,
+    alignSelf: 'center',
+    backgroundColor: '#d0e1d3',
+    width: 65,
+    height: 65,
+    borderRadius: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 999,
   },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    position:'relative',
+    width:'80%',
+    height:'50%'
+  },
+  dice:{
+    position:'absolute',
+    top:30
+  },
+  roll: {
+    fontWeight:'700',
+    position:'absolute',
+    top:94,
+    fontSize:25,
+    color:'white',
+    paddingLeft:1
+  },
+  closeButton: {
+    position:'absolute',
+    bottom:10
+  },
+  picker:{
+    position:'absolute',
+    bottom:130,
+    width:'90%',
+    height:20,
+    
+  },
+  pickerItem:{
+    fontSize:12
+  },
+  buttonTirar: {
+    position:'absolute',
+    bottom:70,
+    width:'85%',
+    alignItems:'center',
+    justifyContent:'center',
+    backgroundColor:'#a0a474',
+    padding:15,
+    borderRadius:10
+  },
+  textTirar:{
+    fontWeight:'800',
+    color:'white'
+  }
 });
 
 export default _layout

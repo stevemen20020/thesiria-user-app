@@ -30,14 +30,7 @@
       "bundler": "metro"
     },
     "plugins": [
-        ["expo-router"],
-        [
-          "@rnmapbox/maps",
-          {
-            "RNMapboxMapsImpl": "mapbox",
-            "RNMapboxMapsVersion": "10.16.2",
-          }
-        ]
+      "expo-router"
     ]
   }
 }
