@@ -32,7 +32,7 @@ const CustomButton = ({ onPress }) => (
 );
 
 const _layout = () => {
-  const [modalVisible, setModalVisible] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
   const [rolledNumber, setRolledNumber] = useState(20)
   const [selectedValue, setSelectedValue] = useState('');
   const [shuffleInterval, setShuffleInterval] = useState(null);

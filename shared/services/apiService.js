@@ -18,7 +18,7 @@ class ApiService {
   }
 
   //-------------------------------------------------------//
-  //--------------COMMO METHODS----------------------------//
+  //--------------COMMON METHODS---------------------------//
   //-------------------------------------------------------//
 
   //-------------------------------------------------------//
@@ -74,6 +74,24 @@ class ApiService {
   getNPCJournalById = async(id_npc_journal) => {
     try {
       const response = await fetch(`${this.URL}${this.endpoints.playable_character_journal}/${id_npc_journal}`, {
+        method: 'GET'
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch ( error ) {
+      return error;
+    }
+  }
+
+  //-------------------------------------------------------//
+  //--------------FUNCTIONS FOR CHARACTER------------------//
+  //-------------------------------------------------------//
+
+  getCharacterById = async(character_id) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.playable_character}/${character_id}`, {
         method: 'GET'
       })
       if (!response.ok) {
