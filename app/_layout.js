@@ -8,6 +8,7 @@ const StackLayout = () => {
       <Stack.Screen name="CharacterMission" options={{headerShown:false}} />
       <Stack.Screen name="DetailMission" options={{headerShown:false}} />
       <Stack.Screen name="DetailCharacter" options={{headerShown:false}} />
+      <Stack.Screen name="DetailAsset" options={{headerShown:false}} />
     </Stack>
   )
 }

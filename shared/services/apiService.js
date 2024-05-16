@@ -84,6 +84,24 @@ class ApiService {
       return error;
     }
   }
+
+  //-------------------------------------------------------//
+  //-----------FUNCTIONS FOR CHARACTER SHEET---------------//
+  //-------------------------------------------------------//
+
+  getPlayerById = async (id_player) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.playable_character}/${id_player}`, {
+        method: 'GET'
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
 }
 
 export default ApiService

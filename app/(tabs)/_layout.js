@@ -32,7 +32,7 @@ const CustomButton = ({ onPress }) => (
 );
 
 const _layout = () => {
-  const [modalVisible, setModalVisible] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
   const [rolledNumber, setRolledNumber] = useState(20)
   const [selectedValue, setSelectedValue] = useState('');
   const [shuffleInterval, setShuffleInterval] = useState(null);
@@ -118,8 +118,10 @@ const _layout = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <FontAwesome5 name="dice-d20" size={150} color="#a0a474" style={styles.dice}/>
-            <Text style={styles.roll}>{rolledNumber}</Text>
+            <View style={styles.diceContainer}>
+              <FontAwesome5 name="dice-d20" size={150} color="#a0a474" style={styles.dice}/>
+              <Text style={styles.roll}>{rolledNumber}</Text>
+            </View>
             <Picker
               selectedValue={selectedValue}
               style={styles.picker}
@@ -177,8 +179,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     position:'relative',
+    display:'flex',
+    flexDirection:'column',
     width:'80%',
-    height:'50%'
+    height:450
   },
   dice:{
     position:'absolute',
@@ -193,12 +197,9 @@ const styles = StyleSheet.create({
     paddingLeft:1
   },
   closeButton: {
-    position:'absolute',
-    bottom:10
+
   },
   picker:{
-    position:'absolute',
-    bottom:130,
     width:'90%',
     height:20,
     
@@ -207,8 +208,6 @@ const styles = StyleSheet.create({
     fontSize:12
   },
   buttonTirar: {
-    position:'absolute',
-    bottom:70,
     width:'85%',
     alignItems:'center',
     justifyContent:'center',
@@ -219,6 +218,14 @@ const styles = StyleSheet.create({
   textTirar:{
     fontWeight:'800',
     color:'white'
+  },
+  diceContainer:{
+    position:'relative',
+    width:'100%',
+    height:200,
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center'
   }
 });
 
