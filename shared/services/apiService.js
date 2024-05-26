@@ -14,7 +14,10 @@ class ApiService {
     missions: 'missions',
     playable_character_journal: 'playable_character_journal',
     npc:'npc',
-    playable_character_journal:'playable_character_journal'
+    playable_character_journal:'playable_character_journal',
+    inventory: 'inventory',
+    inventoryWeapon: 'inventory_weapon',
+    inventoryArmor: 'inventory_armor',
   }
 
   //-------------------------------------------------------//
@@ -93,6 +96,74 @@ class ApiService {
     try {
       const response = await fetch(`${this.URL}${this.endpoints.playable_character}/${id_player}`, {
         method: 'GET'
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  getSpecificInventory = async (id_player, id_object) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.inventory}?id_playable_character=${id_player}&id_object=${id_object}`, {
+        method: 'GET'
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  upgradeWeapon = async (id_inventory_weapon, body) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.inventoryWeapon}/${id_inventory_weapon}`, {
+        method: 'PUT',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body)
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  upgradeArmor = async (id_inventory_armor, body) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.inventoryArmor}/${id_inventory_armor}`, {
+        method: 'PUT',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body)
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  patchInventory = async (body) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.inventory}`, {
+        method: 'PATCH',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body)
       })
       if (!response.ok) {
         throw {status: response.status, message:'Error' };

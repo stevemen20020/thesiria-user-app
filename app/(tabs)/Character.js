@@ -118,8 +118,8 @@ const Character = () => {
 
             {activeCharacter.armor_id !== null && (
               <>
-              <Text>Arma equipada:</Text>
-              <TouchableOpacity style={styles.basicContainer}>
+              <Text>Armadura equipada:</Text>
+              <TouchableOpacity style={styles.basicContainer} onPress={() => handleDetail('armor')}>
                 <Text style={{flex:7}}>{activeCharacter.inventory_armor_playable_character_armor_idToinventory_armor.armor.name}</Text>
                 <Image
                   style={[styles.variedIcon,{flex:3}]}
