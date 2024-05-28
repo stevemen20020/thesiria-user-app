@@ -173,6 +173,48 @@ class ApiService {
       return error;
     }
   }
+
+  getInventory = async (id_user) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.inventory}?id_playable_character=${id_user}`, {
+        method:'GET'
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  getWeapons = async (id_user) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.inventoryWeapon}?id_playable_character=${id_user}`, {
+        method:'GET'
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  getArmors = async (id_user) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.inventoryArmor}?id_playable_character=${id_user}`, {
+        method:'GET'
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
 }
 
 export default ApiService

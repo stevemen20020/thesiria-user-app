@@ -36,7 +36,6 @@ const DetailAsset = () => {
 
   useEffect(() => {
     const decData = JSON.parse(localValues.character)
-    console.log(decData)
     setActiveWeapon(decData.inventory_weapon_playable_character_weapon_idToinventory_weapon)
     setActiveArmor(decData.inventory_armor_playable_character_armor_idToinventory_armor)
     setMode(localValues.mode)
@@ -85,7 +84,6 @@ const DetailAsset = () => {
   const upgradeWeapon = async () => {
     if(mode === 'weapon'){
       const inventory = await apiService.getSpecificInventory(3, activeWeapon.weapon.objects.id)
-      console.log(inventory)
       if('error' in inventory) {
         Alert.alert('No se cuenta con dicho objeto')
         return
@@ -110,13 +108,14 @@ const DetailAsset = () => {
 
       alert('Arma mejorada')
 
-      let arma = activeWeapon
-      arma.level = arma.level + 1
+      const updatedWeapon = {
+        ...activeWeapon,
+        level: activeWeapon.level + 1
+      }
 
-      setActiveWeapon(arma)
+      setActiveWeapon(updatedWeapon)
     } else if (mode === 'armor') {
       const inventory = await apiService.getSpecificInventory(3, activeArmor.armor.objects.id)
-      console.log(inventory)
       if('error' in inventory) {
         Alert.alert('No se cuenta con dicho objeto')
         return
@@ -141,10 +140,12 @@ const DetailAsset = () => {
 
       alert('Arma mejorada')
 
-      let armadura = activeArmor
-      armadura.level = armadura.level + 1
+      const updatedArmor = {
+        ...activeArmor,
+        level: activeArmor.level + 1,
+      };    
+      setActiveArmor(updatedArmor);
 
-      setActiveArmor(armadura)
     }
   }
 
@@ -300,7 +301,7 @@ const DetailAsset = () => {
               </View>
 
               <View style={styles.column}>
-                <Text style={styles.columnHeader}>Puntos de daño</Text>
+                <Text style={styles.columnHeader}>Puntos de def.</Text>
                 <Text style={styles.columnText}>{activeArmor.armor.defensive_points_lvl1} pts.</Text>
                 <Text style={styles.columnText}>{activeArmor.armor.defensive_points_lvl2} pts.</Text>
                 <Text style={styles.columnText}>{activeArmor.armor.defensive_points_lvl3} pts.</Text>

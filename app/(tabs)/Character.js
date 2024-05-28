@@ -1,13 +1,16 @@
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, RefreshControl } from 'react-native'
 import { useEffect, useState } from 'react'
 import ApiService from '../../shared/services/apiService'
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import Tooltip from 'react-native-walkthrough-tooltip';
 
 const Character = () => {
   const [activeCharacter, setActiveCharacter] = useState(null)
+  const [devilFruitTooltip, setDevilFruitTooltip] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
 
   const apiService = new ApiService
 
@@ -21,6 +24,12 @@ const Character = () => {
     fetchCharacter()
     .catch((error) => console.error(error))
   },[])
+
+  const handleRefresh = async () => {
+    const response = await apiService.getPlayerById(3)
+    console.log(response.result)
+    setActiveCharacter(response.result)
+  }
 
   const calculateHealth = () => {
     return (activeCharacter.health * 100) / activeCharacter.max_health
@@ -36,8 +45,18 @@ const Character = () => {
     })
   }
 
+  const handleInventory = (mode) => {
+    console.log(mode)
+    router.push({
+      pathname: '/InventoryList',
+      params: {
+        mode:mode
+      }
+    })
+  }
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{alignItems:'center'}}>
+    <ScrollView style={styles.container} contentContainerStyle={{alignItems:'center'}} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh}/>}>
       {activeCharacter !== null && activeCharacter !== undefined && (
         <>
         <View style={styles.emptyHeader}></View>
@@ -141,27 +160,36 @@ const Character = () => {
             {activeCharacter.devil_fruit_id !== null && (
               <>
               <Text>Fruta del diablo:</Text>
-              <TouchableOpacity style={styles.basicContainer}>
-                <Text>{activeCharacter.devil_fruit.name}</Text>
-              </TouchableOpacity>
+              <Tooltip
+                isVisible={devilFruitTooltip}
+                content={<Text>{activeCharacter.devil_fruit.description}</Text>}
+                placement="top"
+                onClose={() => setDevilFruitTooltip(false)}
+              >
+                <TouchableOpacity style={styles.basicContainer} onPress={() => setDevilFruitTooltip(true)}>
+                  <Text>{activeCharacter.devil_fruit.name}</Text>
+                </TouchableOpacity>
+              </Tooltip>
               </>
             )}
           </View>
 
           <Text style={{marginTop:15, marginBottom:15}}>Mis pertenencias:</Text>
           <View style={styles.buttonBag}>
-            <TouchableOpacity style={styles.button}>
+
+            <TouchableOpacity style={styles.button} onPress={()=> {handleInventory('inventory')}}>
               <MaterialIcons name="inventory" size={74} color={activeCharacter.affinity.color} />
               <Text>Inventario</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={()=> {handleInventory('weapons')}}>
               <MaterialCommunityIcons name="sword" size={74} color={activeCharacter.affinity.color} />
               <Text>Armas</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={()=> {handleInventory('armors')}}>
               <FontAwesome5 name="shield-alt" size={74} color={activeCharacter.affinity.color} />
               <Text>Armaduras</Text>
             </TouchableOpacity>
+
           </View>
           <View style={styles.leftAlign}>
             <Text style={{marginTop:30}}>Mi biografía:</Text>
@@ -170,7 +198,6 @@ const Character = () => {
             </View>
           </View>
           
-
         </View>
         <View style={styles.emptyFooter}></View>
         </>
