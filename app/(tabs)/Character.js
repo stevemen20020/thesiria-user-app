@@ -17,7 +17,6 @@ const Character = () => {
   useEffect(() => {
     const fetchCharacter = async () => {
       const response = await apiService.getPlayerById(3)
-      console.log(response.result)
       setActiveCharacter(response.result)
     }
 
@@ -27,7 +26,6 @@ const Character = () => {
 
   const handleRefresh = async () => {
     const response = await apiService.getPlayerById(3)
-    console.log(response.result)
     setActiveCharacter(response.result)
   }
 
@@ -46,7 +44,6 @@ const Character = () => {
   }
 
   const handleInventory = (mode) => {
-    console.log(mode)
     router.push({
       pathname: '/InventoryList',
       params: {

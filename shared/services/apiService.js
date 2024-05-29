@@ -24,6 +24,42 @@ class ApiService {
   //--------------COMMO METHODS----------------------------//
   //-------------------------------------------------------//
 
+  putPlayableCharacter = async(body, id_playable_character) => {
+    try{
+      const response = await fetch(`${this.URL}${this.endpoints.playable_character}/${id_playable_character}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(body)
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch ( error ) {
+      return error;
+    }
+  }
+
+  putInventory = async (body, id_inventory) => {
+    try{
+      const response = await fetch(`${this.URL}${this.endpoints.inventory}/${id_inventory}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(body)
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch ( error ) {
+      return error;
+    }
+  }
+
   //-------------------------------------------------------//
   //--------------FUNCTIONS FOR AUTH-----------------------//
   //-------------------------------------------------------//
