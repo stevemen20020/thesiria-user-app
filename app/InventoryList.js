@@ -169,6 +169,7 @@ const InventoryList = () => {
           style={styles.input}
           onChangeText={onChangeInventory}
           value={inventoryInput}
+          placeholder='Busca un objeto'
         />
         <FlatList
           data={filteredInventory}
@@ -198,6 +199,7 @@ const InventoryList = () => {
           style={styles.input}
           onChangeText={onChangeWeapon}
           value={weaponInput}
+          placeholder='Busca un arma'
         />
         <FlatList
           data={filteredWeapons}
@@ -235,6 +237,7 @@ const InventoryList = () => {
         style={styles.input}
         onChangeText={onChangeArmor}
         value={armorInput}
+        placeholder='Busca una armadura'
         />
         <FlatList
           data={filteredArmors}

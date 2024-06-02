@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, RefreshControl } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, RefreshControl, Modal, Pressable } from 'react-native'
 import { useEffect, useState } from 'react'
 import ApiService from '../../shared/services/apiService'
 import { MaterialIcons } from '@expo/vector-icons';
@@ -6,11 +6,18 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Tooltip from 'react-native-walkthrough-tooltip';
+import { Picker } from '@react-native-picker/picker';
+import Slider from '@react-native-community/slider';
+import { AntDesign } from '@expo/vector-icons';
 
 const Character = () => {
   const [activeCharacter, setActiveCharacter] = useState(null)
+  const [allCharacters, setAllCharacters] = useState(null)
   const [devilFruitTooltip, setDevilFruitTooltip] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(0);
+  const [moneyToGift, setMoneyToGift] = useState(0)
 
   const apiService = new ApiService
 
@@ -20,7 +27,14 @@ const Character = () => {
       setActiveCharacter(response.result)
     }
 
+    const fetchCharacters = async () => {
+      const response = await apiService.getAllPlayableCharacters()
+      setAllCharacters(response.result)
+    }
+
     fetchCharacter()
+    .catch((error) => console.error(error))
+    fetchCharacters()
     .catch((error) => console.error(error))
   },[])
 
@@ -52,6 +66,22 @@ const Character = () => {
     })
   }
 
+  const handleGiftMoney = async () => {
+    const body = {
+      money: parseFloat(moneyToGift),
+      giftingPlayer: 3,
+      giftedPlayer: parseInt(selectedValue)
+    }
+    const response = await apiService.giftMoney(body)
+
+    const personaje = {
+      ...activeCharacter,
+      money:response.result.lostMoney
+    }
+    console.log(personaje.money, response)
+    setActiveCharacter(personaje)
+  }
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={{alignItems:'center'}} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh}/>}>
       {activeCharacter !== null && activeCharacter !== undefined && (
@@ -78,7 +108,12 @@ const Character = () => {
           <Text>Vida</Text>
 
           <View style={styles.leftAlign}>
-            <Text>Oro: {activeCharacter.money.toLocaleString()}</Text>
+            <View style={{display:'flex', flexDirection:'row', gap:2, alignItems:'center'}}>
+              <Text>Oro: </Text>
+              <TouchableOpacity onPress={() => setModalVisible(true)}>
+                <Text style={styles.goldModal}>{activeCharacter.money.toLocaleString()}</Text>
+              </TouchableOpacity>
+            </View>
             <Text>Mis stats:</Text>
             <View style={styles.statsContainer}>
               <View style={styles.statRow}>
@@ -197,6 +232,51 @@ const Character = () => {
           
         </View>
         <View style={styles.emptyFooter}></View>
+
+        {/* MODAL PARA PASAR DINERO */}
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        {allCharacters !== null && (<>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalTitle}>Regalar dinero</Text>
+              <Text style={styles.modalSubtitle}>¿Por qué harías eso?</Text>
+
+              <Picker
+                selectedValue={selectedValue}
+                style={styles.picker}
+                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                mode='dropdown'
+              >
+                <Picker.Item label="Selecciona un jugador" value={-1} style={styles.pickerItem}/>
+                {allCharacters.map((character, index) => (
+                  <Picker.Item key={index} label={character.name} value={character.id} style={styles.pickerItem}/>
+                ))}
+              </Picker>
+              <Slider
+                style={styles.moneySlider}
+                minimumValue={0}
+                maximumValue={parseFloat(activeCharacter.money)}
+                value={moneyToGift}
+                onValueChange={(value) => setMoneyToGift(value)}
+              />
+              <Text style={styles.modalSubtitle}>{moneyToGift.toLocaleString()}</Text>
+              <TouchableOpacity style={styles.giftButton} onPress={() => handleGiftMoney()} disabled={selectedValue <= 0 || moneyToGift === 0}>
+                <Text>Regalar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+                <AntDesign name="close" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+            </View>
+        </>)}
+        </Modal>   
         </>
       )}
     </ScrollView>
@@ -346,6 +426,71 @@ const styles = StyleSheet.create({
       gap:10,
       alignItems:'center',
       justifyContent:'center'
+    },
+    goldModal:{
+      textDecorationStyle:'solid',
+      textDecorationLine:'underline',
+      color:'#2093f3'
+    },
+
+    modalView: {
+      margin: 20,
+      backgroundColor: 'white',
+      borderRadius: 20,
+      padding: 15,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+      height:240
+    },
+    buttonOpen: {
+      backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+      backgroundColor: '#2196F3',
+    },
+    textStyle: {
+      color: 'white',
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    modalTitle: {
+      textAlign: 'center',
+      fontWeight:'600'
+    },
+    modalSubtitle: {
+      textAlign: 'center',
+      fontWeight:'600',
+      fontSize:10
+    },
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+    },
+    picker:{
+      width:'90%',
+      height:20,
+    },
+    pickerItem:{
+      fontSize:12
+    },
+    moneySlider:{
+      width:'100%',
+      height:30
+    },
+    giftButton:{
+      backgroundColor: '#d0e1d3',
+      padding:10,
+      margin:10,
+      borderRadius:6,
+      width:'70%',
+      alignItems:'center'
     }
   })
 

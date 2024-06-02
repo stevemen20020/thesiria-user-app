@@ -18,11 +18,26 @@ class ApiService {
     inventory: 'inventory',
     inventoryWeapon: 'inventory_weapon',
     inventoryArmor: 'inventory_armor',
+    giftMoney:'gift-money',
   }
 
   //-------------------------------------------------------//
   //--------------COMMO METHODS----------------------------//
   //-------------------------------------------------------//
+
+  getAllPlayableCharacters = async() => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.playable_character}`, {
+        method: 'GET',
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
 
   putPlayableCharacter = async(body, id_playable_character) => {
     try{
@@ -242,6 +257,24 @@ class ApiService {
     try {
       const response = await fetch(`${this.URL}${this.endpoints.inventoryArmor}?id_playable_character=${id_user}`, {
         method:'GET'
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  giftMoney = async (body) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.playable_character}/${this.endpoints.giftMoney}`, {
+        method:'PATCH',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body)
       })
       if (!response.ok) {
         throw {status: response.status, message:'Error' };
