@@ -22,7 +22,7 @@ class ApiService {
   }
 
   //-------------------------------------------------------//
-  //--------------COMMO METHODS----------------------------//
+  //--------------COMMON METHODS---------------------------//
   //-------------------------------------------------------//
 
   getAllPlayableCharacters = async() => {
@@ -140,12 +140,14 @@ class ApiService {
   }
 
   //-------------------------------------------------------//
+
   //-----------FUNCTIONS FOR CHARACTER SHEET---------------//
   //-------------------------------------------------------//
 
   getPlayerById = async (id_player) => {
     try {
       const response = await fetch(`${this.URL}${this.endpoints.playable_character}/${id_player}`, {
+
         method: 'GET'
       })
       if (!response.ok) {

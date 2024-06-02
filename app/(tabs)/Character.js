@@ -1,9 +1,11 @@
+
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, RefreshControl, Modal, Pressable } from 'react-native'
 import { useEffect, useState } from 'react'
 import ApiService from '../../shared/services/apiService'
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+
 import { router } from 'expo-router';
 import Tooltip from 'react-native-walkthrough-tooltip';
 import { Picker } from '@react-native-picker/picker';
@@ -278,6 +280,7 @@ const Character = () => {
         </>)}
         </Modal>   
         </>
+
       )}
     </ScrollView>
   )
