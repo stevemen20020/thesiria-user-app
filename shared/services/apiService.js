@@ -21,7 +21,8 @@ class ApiService {
     giftMoney:'gift-money',
     giftItem: 'gift-inventory',
     transferWeapon: 'transfer-weapon',
-    transferArmor: 'transfer-armor'
+    transferArmor: 'transfer-armor',
+    attack: 'attack'
   }
 
   //-------------------------------------------------------//
@@ -333,6 +334,24 @@ class ApiService {
           'Content-Type':'application/json'
         },
         body:JSON.stringify(body)
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  //-------------------------------------------------------//
+  //-----------FUNCTIONS FOR ATTACKS-----------------------//
+  //-------------------------------------------------------//
+
+  getMyAttacks = async(id_user) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.attack}?id_playable_character=${id_user}`, {
+        method:'GET',
       })
       if (!response.ok) {
         throw {status: response.status, message:'Error' };
