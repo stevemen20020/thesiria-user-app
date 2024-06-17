@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
-import { View, Text, FlatList, StyleSheet, TextInput, Image } from 'react-native'
+import { View, Text, FlatList, StyleSheet, TextInput, Image, Modal, TouchableOpacity } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
 import ApiService from '../shared/services/apiService'
 import { router } from 'expo-router';
+import { Picker } from '@react-native-picker/picker';
+import Slider from '@react-native-community/slider';
+import { AntDesign } from '@expo/vector-icons';
 
 const InventoryList = () => {
   const [inventory, setInventory] = useState([])
@@ -16,6 +19,17 @@ const InventoryList = () => {
   const [inventoryInput, setInventoryInput] = useState('')
   const [weaponInput, setWeaponInput] = useState('')
   const [armorInput, setArmorInput] = useState('')
+  const [modalInventoryVisible, setModalInventoryVisible] = useState(false);
+  const [modalWeaponsVisible, setModalWeaponsVisible] = useState(false);
+  const [modalArmorsVisible, setModalArmorsVisible] = useState(false);
+  const [allCharacters, setAllCharacters] = useState(null)
+  const [selectedCharacterInventory, setSelectedCharacterInventory] = useState(null)
+  const [selectedCharacterWeapon, setSelectedCharacterWeapon] = useState(null)
+  const [selectedCharacterArmor, setSelectedCharacterArmor] = useState(null)
+  const [itemAmountToGift, setItemAmountToGift] = useState(0)
+  const [selectedItem, setSelectedItem] = useState(null)
+  const [selectedWeapon, setSelectedWeapon] = useState(null)
+  const [selectedArmor, setSelectedArmor] = useState(null)
 
   const { mode } = useLocalSearchParams()
   const apiService = new ApiService
@@ -48,7 +62,14 @@ const InventoryList = () => {
       setActiveCharacter(response.result)
     }
 
+    const fetchAllCharacters = async () => {
+      const response = await apiService.getAllPlayableCharacters()
+      setAllCharacters(response.result)
+    }
+
     fetchCharacter()
+    .catch((error) => console.error(error))
+    fetchAllCharacters()
     .catch((error) => console.error(error))
 
   }, [mode]); 
@@ -157,6 +178,56 @@ const InventoryList = () => {
     }
   };
 
+  const handleGiftItem = async () => {
+    const body = {
+      id_character: selectedItem.id_playable_character,
+      id_receiving_character: selectedCharacterInventory,
+      id_object: selectedItem.id_object,
+      amount: parseInt(itemAmountToGift)
+    }
+
+    const response = await apiService.giftItem(body)
+    if(response.message === "Success"){
+      setModalInventoryVisible(false)
+      const response = await apiService.getInventory(3);
+      setInventory(response.result);
+      setFilteredInventory(response.result)
+    }
+  }
+
+  const handleGiftWeapon = async () => {
+    const body = {
+      id_player: selectedWeapon.id_user,
+      id_receiving_player: selectedCharacterWeapon,
+      id_weapon: selectedWeapon.id_weapon,
+    }
+    const response = await apiService.giftWeapon(body)
+    if(response.message === "Success"){
+      setModalWeaponsVisible(false)
+      const response = await apiService.getWeapons(3);
+      setWeapons(response.result);
+      setFilteredWeapons(response.result)
+    }
+  }
+
+  const handleGiftArmor = async () => {
+    const body = {
+      id_player: selectedArmor.id_user,
+      id_receiving_player: selectedCharacterArmor,
+      id_armor: selectedArmor.id_armor,
+    }
+
+    console.log(body)
+    const response = await apiService.giftArmor(body)
+    console.log(response)
+    if(response.message === "Success"){
+      setModalArmorsVisible(false)
+      const response = await apiService.getArmors(3);
+      setArmors(response.result);
+      setFilteredArmors(response.result)
+    }
+  }
+
   return (
     <View style={styles.container}>
       {activeCharacter !== null && (
@@ -184,6 +255,7 @@ const InventoryList = () => {
               </MenuTrigger>
               <MenuOptions>
                 <MenuOption onSelect={() => handleGoToDetail('weapon', item)} text='Detalle' />
+                <MenuOption onSelect={() => {setModalInventoryVisible(true); setSelectedItem(item)}} text='Regalar' />
                 <MenuOption onSelect={() => handleUse(item)} text='Usar' />
               </MenuOptions>
             </Menu>
@@ -217,7 +289,7 @@ const InventoryList = () => {
               </MenuTrigger>
               <MenuOptions>
                 <MenuOption onSelect={() => handleGoToDetail('weapon', item)} text='Detalle' />
-                <MenuOption onSelect={() => handleGoToDetail('weapon', item)} text='Pasar a...' />
+                <MenuOption onSelect={() => {setModalWeaponsVisible(true); setSelectedWeapon(item)}} text='Pasar a...' />
                 {handleVerifyEquipedWeapon(item) ? (
                   <MenuOption onSelect={() => handleEquip(null)} text='Desequipar' />
                 ) : (
@@ -254,6 +326,7 @@ const InventoryList = () => {
               </MenuTrigger>
               <MenuOptions>
                 <MenuOption onSelect={() => handleGoToDetail('armor', item)} text='Detalle' />
+                <MenuOption onSelect={() => {setModalArmorsVisible(true); setSelectedArmor(item)}} text='Pasar a...' />
                 {handleVerifyEquipedArmor(item) ? (
                   <MenuOption onSelect={() => handleEquipArmor(null)} text='Desequipar' />
                 ) : (
@@ -266,6 +339,132 @@ const InventoryList = () => {
         />
         </>
       )}
+
+      {/* MODALES */}
+
+      {/* MODAL PARA PASAR OBJETOS */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalInventoryVisible}
+        onRequestClose={() => {
+          setModalInventoryVisible(!modalInventoryVisible);
+        }}>
+        {allCharacters !== null && selectedItem !== null && (
+          <>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalTitle}>Transferir {selectedItem.objects.name}</Text>
+                <Text style={styles.modalSubtitle}>¿Por qué harías eso?</Text>
+
+                <Picker
+                  selectedValue={selectedCharacterInventory}
+                  style={styles.picker}
+                  onValueChange={(itemValue, itemIndex) => setSelectedCharacterInventory(itemValue)}
+                  mode='dropdown'
+                >
+                  <Picker.Item label="Selecciona un jugador" value={-1} style={styles.pickerItem} />
+                  {allCharacters.map((character, index) => (
+                    <Picker.Item key={index} label={character.name} value={character.id} style={styles.pickerItem} />
+                  ))}
+                </Picker>
+                <Slider
+                  style={styles.moneySlider}
+                  minimumValue={0}
+                  maximumValue={parseFloat(selectedItem.quantity)}
+                  value={itemAmountToGift}
+                  onValueChange={(value) => setItemAmountToGift(value)}
+                  step={1}  // Esta propiedad asegura que el Slider solo seleccione números enteros
+                />
+                <Text style={styles.modalSubtitle}>{itemAmountToGift.toLocaleString()}</Text>
+                <TouchableOpacity style={styles.giftButton} onPress={() => handleGiftItem()} disabled={itemAmountToGift <= 0 || itemAmountToGift === 0}>
+                  <Text>Transferir</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setModalInventoryVisible(false)} style={styles.closeButton}>
+                  <AntDesign name="close" size={24} color="black" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
+        )}
+      </Modal>
+
+      {/* MODAL PARA PASAR ARMAS */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalWeaponsVisible}
+        onRequestClose={() => {
+          setModalWeaponsVisible(!modalWeaponsVisible);
+        }}>
+        {allCharacters !== null && selectedWeapon !== null && (
+          <>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalTitle}>Transferir {selectedWeapon.weapon.name}</Text>
+                <Text style={styles.modalSubtitle}>¿Por qué harías eso?</Text>
+
+                <Picker
+                  selectedValue={selectedCharacterWeapon}
+                  style={styles.picker}
+                  onValueChange={(itemValue, itemIndex) => setSelectedCharacterWeapon(itemValue)}
+                  mode='dropdown'
+                >
+                  <Picker.Item label="Selecciona un jugador" value={-1} style={styles.pickerItem} />
+                  {allCharacters.map((character, index) => (
+                    <Picker.Item key={index} label={character.name} value={character.id} style={styles.pickerItem} />
+                  ))}
+                </Picker>
+                <TouchableOpacity style={styles.giftButton} onPress={() => handleGiftWeapon()} disabled={selectedCharacterWeapon <= 0 || selectedCharacterWeapon === 0}>
+                  <Text>Transferir</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setModalWeaponsVisible(false)} style={styles.closeButton}>
+                  <AntDesign name="close" size={24} color="black" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
+        )}
+      </Modal>
+
+      {/* MODAL PARA PASAR ARMADURAS */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalArmorsVisible}
+        onRequestClose={() => {
+          setModalArmorsVisible(!modalArmorsVisible);
+        }}>
+        {allCharacters !== null && selectedArmor !== null && (
+          <>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalTitle}>Transferir {selectedArmor.armor.name}</Text>
+                <Text style={styles.modalSubtitle}>¿Por qué harías eso?</Text>
+
+                <Picker
+                  selectedValue={selectedCharacterArmor}
+                  style={styles.picker}
+                  onValueChange={(itemValue, itemIndex) => setSelectedCharacterArmor(itemValue)}
+                  mode='dropdown'
+                >
+                  <Picker.Item label="Selecciona un jugador" value={-1} style={styles.pickerItem} />
+                  {allCharacters.map((character, index) => (
+                    <Picker.Item key={index} label={character.name} value={character.id} style={styles.pickerItem} />
+                  ))}
+                </Picker>
+                <TouchableOpacity style={styles.giftButton} onPress={() => handleGiftArmor()} disabled={selectedCharacterArmor <= 0 || selectedCharacterArmor === 0}>
+                  <Text>Transferir</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setModalArmorsVisible(false)} style={styles.closeButton}>
+                  <AntDesign name="close" size={24} color="black" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
+        )}
+      </Modal>
+  
       </>
       )}
     </View>
@@ -318,7 +517,55 @@ const styles = StyleSheet.create({
     marginBottom:30,
     paddingLeft:10,
     paddingRight:10
-  }
+  },
+  modalTitle: {
+    textAlign: 'center',
+    fontWeight:'600'
+  },
+  modalSubtitle: {
+    textAlign: 'center',
+    fontWeight:'600',
+    fontSize:10
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  picker:{
+    width:'90%',
+    height:20,
+  },
+  pickerItem:{
+    fontSize:12
+  },
+  moneySlider:{
+    width:'100%',
+    height:30
+  },
+  giftButton:{
+    backgroundColor: '#d0e1d3',
+    padding:10,
+    margin:10,
+    borderRadius:6,
+    width:'70%',
+    alignItems:'center'
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    height:240
+  },
 })
 
 export default InventoryList

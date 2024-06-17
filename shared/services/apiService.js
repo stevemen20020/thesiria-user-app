@@ -19,6 +19,9 @@ class ApiService {
     inventoryWeapon: 'inventory_weapon',
     inventoryArmor: 'inventory_armor',
     giftMoney:'gift-money',
+    giftItem: 'gift-inventory',
+    transferWeapon: 'transfer-weapon',
+    transferArmor: 'transfer-armor'
   }
 
   //-------------------------------------------------------//
@@ -140,7 +143,6 @@ class ApiService {
   }
 
   //-------------------------------------------------------//
-
   //-----------FUNCTIONS FOR CHARACTER SHEET---------------//
   //-------------------------------------------------------//
 
@@ -272,6 +274,60 @@ class ApiService {
   giftMoney = async (body) => {
     try {
       const response = await fetch(`${this.URL}${this.endpoints.playable_character}/${this.endpoints.giftMoney}`, {
+        method:'PATCH',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body)
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  giftItem = async(body) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.inventory}/${this.endpoints.giftItem}`, {
+        method:'PATCH',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body)
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+  
+  giftWeapon = async(body) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.inventoryWeapon}/${this.endpoints.transferWeapon}`, {
+        method:'PATCH',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body)
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  giftArmor = async(body) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.inventoryArmor}/${this.endpoints.transferArmor}`, {
         method:'PATCH',
         headers:{
           'Content-Type':'application/json'
