@@ -22,7 +22,8 @@ class ApiService {
     giftItem: 'gift-inventory',
     transferWeapon: 'transfer-weapon',
     transferArmor: 'transfer-armor',
-    attack: 'attack'
+    attack: 'attack',
+    inventoryMagic:'inventory_magic'
   }
 
   //-------------------------------------------------------//
@@ -351,6 +352,74 @@ class ApiService {
   getMyAttacks = async(id_user) => {
     try {
       const response = await fetch(`${this.URL}${this.endpoints.attack}?id_playable_character=${id_user}`, {
+        method:'GET',
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  putAttackById = async(id_attack, body) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.attack}/${id_attack}`, {
+        method:'PUT',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body)
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  deleteAttack = async(id_attack) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.attack}/${id_attack}`, {
+        method:'DELETE',
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  insertAttack = async(body) => {
+    try{
+      const response = await fetch(`${this.URL}${this.endpoints.attack}`, {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body)
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
+  //-------------------------------------------------------//
+  //-----------FUNCTIONS FOR SPELLS------------------------//
+  //-------------------------------------------------------//
+
+  getMySpells = async(id_user) => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.inventoryMagic}?id_playable_character=${id_user}`, {
         method:'GET',
       })
       if (!response.ok) {
