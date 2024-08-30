@@ -7,6 +7,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
+import { MenuProvider } from "react-native-popup-menu"
+
 
 const screenOptions= {
     tabBarShowLabel: false,

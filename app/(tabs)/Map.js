@@ -1,12 +1,13 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Button } from 'react-native'
 import React from 'react'
-
+import { router } from 'expo-router';
 
 const Map = () => {
   return (
     <View style={styles.page}>
         <View style={styles.container}>
         </View>
+        <Button onPress={() => {router.push('/battle')}} title='Pelea'/>
       </View>
   )
 }
