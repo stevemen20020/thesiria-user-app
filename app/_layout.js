@@ -14,6 +14,7 @@ const StackLayout = () => {
       <Stack.Screen name="DetailCharacter" options={{headerShown:false}} />
       <Stack.Screen name="DetailAsset" options={{headerShown:false}} />
       <Stack.Screen name="InventoryList" options={{headerShown:false}} />
+      <Stack.Screen name="battle" options={{headerShown:false}} />
     </Stack>
     </MenuProvider>
     </RootSiblingParent>
