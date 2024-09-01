@@ -44,6 +44,20 @@ class ApiService {
     }
   }
 
+  getAllNpcCharacters = async() => {
+    try {
+      const response = await fetch(`${this.URL}${this.endpoints.npc}`, {
+        method: 'GET',
+      })
+      if (!response.ok) {
+        throw {status: response.status, message:'Error' };
+      }
+      return response.json()
+    } catch (error) {
+      return error;
+    }
+  }
+
   putPlayableCharacter = async(body, id_playable_character) => {
     try{
       const response = await fetch(`${this.URL}${this.endpoints.playable_character}/${id_playable_character}`, {

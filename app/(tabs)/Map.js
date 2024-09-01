@@ -7,7 +7,7 @@ const Map = () => {
     <View style={styles.page}>
         <View style={styles.container}>
         </View>
-        <Button onPress={() => {router.push('/battle')}} title='Pelea'/>
+        <Button onPress={() => {router.push('/Combat_sys/Battle')}} title='Pelea'/>
       </View>
   )
 }
