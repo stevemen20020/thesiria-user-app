@@ -4,52 +4,53 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-const Button_Panel = () => {
-
-  const activeCharacter = {health:200, max_health:250}
+const Button_Panel = ( props ) => {
 
   const calculateHealth = () => {
-    return (activeCharacter.health * 100) / activeCharacter.max_health
+    return (props.character.health * 100) / props.character.max_health
   }
 
 
   return (
     <View style={styles.container}>
+      {props.character && (
+        <>
+          <View style={styles.healthContainer}>
+            <View style={[styles.healthOverlay, {width: `${calculateHealth()}%`, backgroundColor:'#4a1213'}]}></View>
+            <View style={styles.healthBackground}></View>
+            <Text style={styles.healthText}>{props.character.health} / {props.character.max_health}</Text>
+          </View>
 
-      <View style={styles.healthContainer}>
-        <View style={[styles.healthOverlay, {width: `${calculateHealth()}%`, backgroundColor:'#4a1213'}]}></View>
-        <View style={styles.healthBackground}></View>
-        <Text style={styles.healthText}>{activeCharacter.health} / {activeCharacter.max_health}</Text>
-      </View>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button, {backgroundColor:'#124a24'}]}>
-          <MaterialIcons name="inventory" size={24} color="white" />
-          <Text style={styles.buttonText}>
-            Inventario
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, {backgroundColor:'#4a1241'}]}>
-          <MaterialCommunityIcons name="sword-cross" size={24} color="white" />
-          <Text style={styles.buttonText}>
-            Atacar
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button, {backgroundColor:'#4a4612'}]}>
-          <MaterialCommunityIcons name="run" size={24} color="white" />
-          <Text style={styles.buttonText}>
-            Huir
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, {backgroundColor:'#12334a'}]}>
-          <FontAwesome name="exchange" size={24} color="white" />
-          <Text style={styles.buttonText}>
-            Cambiar de arma
-          </Text>
-        </TouchableOpacity>
-      </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={[styles.button, {backgroundColor:'#124a24'}]}>
+              <MaterialIcons name="inventory" size={24} color="white" />
+              <Text style={styles.buttonText}>
+                Inventario
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, {backgroundColor:'#4a1241'}]}>
+              <MaterialCommunityIcons name="sword-cross" size={24} color="white" />
+              <Text style={styles.buttonText}>
+                Atacar
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={[styles.button, {backgroundColor:'#4a4612'}]}>
+              <MaterialCommunityIcons name="run" size={24} color="white" />
+              <Text style={styles.buttonText}>
+                Huir
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, {backgroundColor:'#12334a'}]}>
+              <FontAwesome name="exchange" size={24} color="white" />
+              <Text style={styles.buttonText}>
+                Cambiar de arma
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   )
 }

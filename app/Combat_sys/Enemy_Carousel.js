@@ -25,7 +25,7 @@ const Enemy_Carousel = (props) => {
       const translateY = interpolate(
         value,
         [-1, 0, 1],
-        [-ITEM_HEIGHT, 0, ITEM_HEIGHT]
+        [-ITEM_HEIGHT * 1.5, 0, ITEM_HEIGHT * 1.5]
       );
       const right = interpolate(
         value,
