@@ -28,7 +28,7 @@ const Button_Panel = ( props ) => {
                 Inventario
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, {backgroundColor:'#4a1241'}]}>
+            <TouchableOpacity style={[styles.button, {backgroundColor:'#4a1241'}]} onPress={props.pressAttack}>
               <MaterialCommunityIcons name="sword-cross" size={24} color="white" />
               <Text style={styles.buttonText}>
                 Atacar

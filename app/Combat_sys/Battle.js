@@ -4,10 +4,11 @@ import Enemy_Carousel from './Enemy_Carousel'
 import BattleViewModel from './ViewModel'
 import Button_Panel from './Button_Panel'
 import Animated, { useDerivedValue, useSharedValue, useAnimatedStyle, withTiming, withRepeat } from 'react-native-reanimated'
+import Attack_Drawer from './Attack_Drawer'
 
 const Battle = () => {
 
-  const { enemies, character } = BattleViewModel()
+  const { enemies, character, showAttackDrawer, attacks, showAttacks } = BattleViewModel()
 
   const animation = useSharedValue(0)
   const rotation = useDerivedValue(() => {
@@ -42,7 +43,8 @@ const Battle = () => {
         source={require('../../shared/images/ouroboros.png')}
       />
       <Enemy_Carousel enemyData={enemies}/>
-      <Button_Panel character ={character}/>
+      <Button_Panel character ={character} pressAttack={() => showAttacks()}/>
+      <Attack_Drawer show={showAttackDrawer} attacks={attacks} close={() => showAttacks()}/>
     </View>
   )
 }

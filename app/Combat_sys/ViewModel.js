@@ -5,6 +5,8 @@ import { createSocket } from "../../shared/services/socketService";
 const ViewModel = () => {
   const [socket, setSocket] = useState(null);
 
+  const [showAttackDrawer, setShowAttackDrawer] = useState(false)
+
   const [enemies, setEnemies] = useState([]);
   const [attacks, setAttacks] = useState([])
   const [inventory, setInventory] = useState([])
@@ -37,21 +39,45 @@ const ViewModel = () => {
   }, []);
 
   const parseSocketInfo = (BATTLE) => {
-    console.log('BATTLE', BATTLE)
     setEnemies(BATTLE.npc_enemies)
 
     const characterIndex = BATTLE.players.findIndex(character => character.id === 3)
 
-    console.log('PLAYERS', BATTLE.players[characterIndex])
     setCharacter(BATTLE.players[characterIndex])
-    setAttacks(BATTLE.players[characterIndex].attacks)
+
+    parseAttacks(BATTLE.players[characterIndex].attacks)
+  }
+
+  const parseAttacks = (attacks) => {
+    const favoriteAttacks = attacks.filter(attack => attack.favorite === 1);
+    const regularAttacks = attacks.filter(attack => attack.favorite === 0);
+
+    const attacksData = [
+      {
+        title: "Favoritos",
+        data: favoriteAttacks
+      },
+      {
+        title: "Ataques",
+        data: regularAttacks
+      }
+    ];
+
+    console.log(attacksData)
+    setAttacks(attacksData);
+  }
+
+  const showAttacks = () => {
+    setShowAttackDrawer(!showAttackDrawer)
   }
 
   return {
     enemies,
     attacks,
     inventory,
-    character
+    character,
+    showAttackDrawer,
+    showAttacks
   };
 };
 
