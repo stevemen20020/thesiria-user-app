@@ -12,6 +12,9 @@ const ViewModel = () => {
   const [inventory, setInventory] = useState([])
   const [character, setCharacter] = useState([])
 
+  const [currentObjective, setCurrentObjective] = useState(-1)
+  const [currentObjectiveName, setCurrentObjectiveName] = useState('')
+
   const apiService = new ApiService();
 
   useEffect(() => {
@@ -39,13 +42,59 @@ const ViewModel = () => {
   }, []);
 
   const parseSocketInfo = (BATTLE) => {
-    setEnemies(BATTLE.npc_enemies)
+    console.log('BATALIA', BATTLE)
 
     const characterIndex = BATTLE.players.findIndex(character => character.id === 3)
 
     setCharacter(BATTLE.players[characterIndex])
 
+    if(BATTLE.allied_attacks.length > 0) {
+      BATTLE.allied_attacks.forEach((attack, index) => {
+        if(attack.attack_type === 1) { //IF THE ATTACK IS TO AN NPC
+          if (BATTLE.npc_enemies.length > 0 && attack.objective_ids !== -1) {
+            const index = BATTLE.npc_enemies.findIndex(npc => npc.id === attack.objective_ids);
+            let atk = BATTLE.players[characterIndex].attacks.find(a => a.id === attack.attack_id);
+            
+            // Crear una copia del ataque para evitar referencias mutables
+            atk = { ...atk };
+          
+            console.log('doing...', BATTLE.players[characterIndex].inventory_weapon_playable_character_weapon_idToinventory_weapon.weapon);
+            
+            // Asignar el arma al ataque copiado
+            atk.weapon = BATTLE.players[characterIndex].inventory_weapon_playable_character_weapon_idToinventory_weapon.weapon;
+            console.log('did');
+          
+            if (!BATTLE.npc_enemies[index].received_attacks) {
+              BATTLE.npc_enemies[index].received_attacks = [];
+            }
+          
+            // Push del ataque clonado
+            BATTLE.npc_enemies[index].received_attacks.push(atk);
+          
+            console.log('ATTACKED', BATTLE.npc_enemies[index].received_attacks);
+          }
+        } else if(attack.attack_type === 2) { //IF THE ATTACK IS TO A MONSTER
+          if(BATTLE.monsters.length > 0 && attack.objective_ids !== -1) {
+            const index = BATTLE.monsters.findIndex(npc => npc.id === attack.objective_ids)
+
+            const atk = BATTLE.players[characterIndex].attacks.find(a => a.id === attack.attack_id)
+
+            if (!BATTLE.npc_enemies[index].received_attacks) {
+              BATTLE.npc_enemies[index].received_attacks = [];
+            }
+
+            BATTLE.monsters[index].received_attacks.push(atk)
+          }
+        }
+      })
+    }
+
+    if(BATTLE.npc_enemies.length >0) setEnemies(BATTLE.npc_enemies)
+    if(BATTLE.monsters.length >0) setEnemies([...enemies, BATTLE.monsters])
+
     parseAttacks(BATTLE.players[characterIndex].attacks)
+
+    //console.log(BATTLE)
   }
 
   const parseAttacks = (attacks) => {
@@ -62,13 +111,46 @@ const ViewModel = () => {
         data: regularAttacks
       }
     ];
-
-    console.log(attacksData)
     setAttacks(attacksData);
   }
 
   const showAttacks = () => {
     setShowAttackDrawer(!showAttackDrawer)
+  }
+
+  const sendAttack = (id_attack, attack_objectives) => {
+    const body = {
+      attack_id: parseInt(id_attack),
+      objective_ids: currentObjective,
+      roll: Math.floor(Math.random() * 20) + 1,
+      attack_type: 1
+    }
+
+    const enemyIndex = enemies.findIndex(enemy => enemy.id === currentObjective && enemy.name === enemy.name)
+
+    if (enemies[enemyIndex] && typeof enemies[enemyIndex] === 'object' && 'biography' in enemies[enemyIndex]) {
+      // Perform actions if 'biography' exists in the object
+    } else {
+        body.attack_type = 2;
+    }
+
+    if(attack_objectives === 1) {
+      body.objective_ids = -1
+    }
+
+    
+
+    if (socket) {
+      socket.emit("send-attack", JSON.stringify(body));
+      console.log("Attack sent", body);
+    } else {
+      console.error("Socket is not connected");
+    }
+  }
+
+  const handleEnemyChange = (id, name) => {
+    setCurrentObjective(id)
+    setCurrentObjectiveName(name)
   }
 
   return {
@@ -77,7 +159,9 @@ const ViewModel = () => {
     inventory,
     character,
     showAttackDrawer,
-    showAttacks
+    showAttacks,
+    sendAttack,
+    handleEnemyChange
   };
 };
 

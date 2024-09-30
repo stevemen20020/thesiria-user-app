@@ -1,6 +1,7 @@
 import { View, Text, Image, StyleSheet } from "react-native";
 import React from "react";
 import Octicons from '@expo/vector-icons/Octicons';
+import Attack_Card from "./Attack_Card";
 
 const EnemyCard = (props) => {
 
@@ -17,6 +18,13 @@ const EnemyCard = (props) => {
             </Text>
           </View>
           
+        </View>
+        <View style={styles.attackContainer}>
+          {props.enemy.received_attacks && props.enemy.received_attacks.length > 0 && props.enemy.received_attacks.map((attack, index) => (
+            <View key={index}>
+              <Attack_Card attack={attack}/>
+            </View>
+          ))}
         </View>
       </View>
       <View style={styles.imageContainer}>
@@ -73,5 +81,12 @@ const styles = StyleSheet.create({
     flex:7,
     alignItems:'center',
     justifyContent:'center'
+  },
+  attackContainer:{
+    width:"100%",
+    height:90,
+    display:"flex",
+    flexDirection:'row',
+    paddingTop:5
   }
 })

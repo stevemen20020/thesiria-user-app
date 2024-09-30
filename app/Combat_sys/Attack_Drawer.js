@@ -1,13 +1,16 @@
 import { SectionList, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { useEffect } from 'react';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { FontAwesome6 } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 const Attack_Drawer = (props) => {
   const translateY = useSharedValue(300); // Valor inicial fuera de la vista
 
   // Actualizamos la posición basada en el valor de show
-  React.useEffect(() => {
+  useEffect(() => {
     translateY.value = withTiming(props.show ? 0 : 300, { duration: 200 });
   }, [props.show]);
 
@@ -28,8 +31,25 @@ const Attack_Drawer = (props) => {
         sections={props.attacks}
         keyExtractor={(item, index) => item.id + index}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.reportItem}>
+          <TouchableOpacity style={styles.reportItem} onPress={() => props.selectAttack(item.id, item.attack_type)}>
+            {item.weapon_type === 1 && (
+              <FontAwesome6  name="hand-fist" size={17} color={'black'} />
+            )}
+            {item.weapon_type === 2 && (
+              <MaterialCommunityIcons name="bow-arrow" size={17} color={'black'} />
+            )}
+            {item.weapon_type === 3 && (
+              <MaterialCommunityIcons  name="fruit-grapes" size={17} color={'black'} />
+            )}
+            {item.attack_type === 1 && (
+              <FontAwesome  name="group" size={17} color={'black'} />
+            )}
+            {item.attack_type === 2 && (
+              <FontAwesome  name="user" size={17} color={'black'} />
+            )}
             <Text style={styles.reportText}>{item.name}</Text>
+
+            
           </TouchableOpacity>
         )}
         renderSectionHeader={({ section: { title } }) => (
@@ -71,9 +91,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+    display:'flex',
+    flexDirection:'row',
+    gap:10
   },
   reportText: {
-    fontSize: 16,
+    fontSize: 13,
   },
   subHeader: {
     fontSize: 18,

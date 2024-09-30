@@ -8,7 +8,7 @@ import Attack_Drawer from './Attack_Drawer'
 
 const Battle = () => {
 
-  const { enemies, character, showAttackDrawer, attacks, showAttacks } = BattleViewModel()
+  const { enemies, character, showAttackDrawer, attacks, showAttacks, sendAttack, handleEnemyChange } = BattleViewModel()
 
   const animation = useSharedValue(0)
   const rotation = useDerivedValue(() => {
@@ -42,9 +42,9 @@ const Battle = () => {
         style={[styles.dice, animationStyle]}
         source={require('../../shared/images/ouroboros.png')}
       />
-      <Enemy_Carousel enemyData={enemies}/>
+      <Enemy_Carousel enemyData={enemies} setCurrentObjective={(id, name) => handleEnemyChange(id, name)}/>
       <Button_Panel character ={character} pressAttack={() => showAttacks()}/>
-      <Attack_Drawer show={showAttackDrawer} attacks={attacks} close={() => showAttacks()}/>
+      <Attack_Drawer show={showAttackDrawer} attacks={attacks} close={() => showAttacks()} selectAttack={sendAttack}/>
     </View>
   )
 }
