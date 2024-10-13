@@ -5,10 +5,11 @@ import BattleViewModel from './ViewModel'
 import Button_Panel from './Button_Panel'
 import Animated, { useDerivedValue, useSharedValue, useAnimatedStyle, withTiming, withRepeat } from 'react-native-reanimated'
 import Attack_Drawer from './Attack_Drawer'
+import Weapon_Drawer from './Weapon_Drawer'
 
 const Battle = () => {
 
-  const { enemies, character, showAttackDrawer, attacks, showAttacks, sendAttack, handleEnemyChange } = BattleViewModel()
+  const { enemies, character, showAttackDrawer, attacks, showWeaponDrawer, showWeapons, showAttacks, sendAttack, handleEnemyChange, changeWeapon, fleeBattle } = BattleViewModel()
 
   const animation = useSharedValue(0)
   const rotation = useDerivedValue(() => {
@@ -43,8 +44,25 @@ const Battle = () => {
         source={require('../../shared/images/ouroboros.png')}
       />
       <Enemy_Carousel enemyData={enemies} setCurrentObjective={(id, name) => handleEnemyChange(id, name)}/>
-      <Button_Panel character ={character} pressAttack={() => showAttacks()}/>
-      <Attack_Drawer show={showAttackDrawer} attacks={attacks} close={() => showAttacks()} selectAttack={sendAttack}/>
+      {character !== null && (
+        <>
+        <Button_Panel character ={character} pressAttack={() => showAttacks()} pressWeapon={() => showWeapons()} pressFlee={() => fleeBattle()}/>
+        <Attack_Drawer 
+        show={showAttackDrawer} 
+        attacks={attacks} 
+        close={() => showAttacks()} 
+        selectAttack={sendAttack}/>
+          
+        <Weapon_Drawer 
+        show={showWeaponDrawer} 
+        close={() => showWeapons()} 
+        currentWeapon={character.inventory_weapon_playable_character_weapon_idToinventory_weapon || null}
+        weapons={character.inventory_weapon_inventory_weapon_id_userToplayable_character || null}
+        changeWeapon={changeWeapon}
+        />
+        </>
+      )}
+      
     </View>
   )
 }

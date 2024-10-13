@@ -2,14 +2,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 const Button_Panel = ( props ) => {
 
   const calculateHealth = () => {
     return (props.character.health * 100) / props.character.max_health
   }
-
 
   return (
     <View style={styles.container}>
@@ -23,9 +22,9 @@ const Button_Panel = ( props ) => {
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={[styles.button, {backgroundColor:'#124a24'}]}>
-              <MaterialIcons name="inventory" size={24} color="white" />
+              <FontAwesome6 name="people-group" size={24} color="white" />
               <Text style={styles.buttonText}>
-                Inventario
+                Mis compañeros
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, {backgroundColor:'#4a1241'}]} onPress={props.pressAttack}>
@@ -36,13 +35,13 @@ const Button_Panel = ( props ) => {
             </TouchableOpacity>
           </View>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={[styles.button, {backgroundColor:'#4a4612'}]}>
+            <TouchableOpacity style={[styles.button, {backgroundColor:'#4a4612'}]} onPress={props.pressFlee}>
               <MaterialCommunityIcons name="run" size={24} color="white" />
               <Text style={styles.buttonText}>
                 Huir
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, {backgroundColor:'#12334a'}]}>
+            <TouchableOpacity style={[styles.button, {backgroundColor:'#12334a'}]} onPress={props.pressWeapon}>
               <FontAwesome name="exchange" size={24} color="white" />
               <Text style={styles.buttonText}>
                 Cambiar de arma

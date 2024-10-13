@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import ApiService from "../../shared/services/apiService";
 import { createSocket } from "../../shared/services/socketService";
+import { Alert } from "react-native";
 
 const ViewModel = () => {
   const [socket, setSocket] = useState(null);
 
   const [showAttackDrawer, setShowAttackDrawer] = useState(false)
+  const [showWeaponDrawer, setShowWeaponDrawer] = useState(false)
 
   const [enemies, setEnemies] = useState([]);
   const [attacks, setAttacks] = useState([])
   const [inventory, setInventory] = useState([])
-  const [character, setCharacter] = useState([])
+  const [character, setCharacter] = useState(null)
 
   const [currentObjective, setCurrentObjective] = useState(-1)
   const [currentObjectiveName, setCurrentObjectiveName] = useState('')
@@ -118,6 +120,10 @@ const ViewModel = () => {
     setShowAttackDrawer(!showAttackDrawer)
   }
 
+  const showWeapons = () => {
+    setShowWeaponDrawer(!showWeaponDrawer)
+  }
+
   const sendAttack = (id_attack, attack_objectives) => {
     const body = {
       attack_id: parseInt(id_attack),
@@ -138,8 +144,6 @@ const ViewModel = () => {
       body.objective_ids = -1
     }
 
-    
-
     if (socket) {
       socket.emit("send-attack", JSON.stringify(body));
       console.log("Attack sent", body);
@@ -153,15 +157,59 @@ const ViewModel = () => {
     setCurrentObjectiveName(name)
   }
 
+  const changeWeapon = (id) => {
+    console.log(id, 3)
+
+    const body = {
+      player_id: 3,
+      new_weapon_id: parseInt(id)
+    }
+
+    if (socket) {
+      socket.emit("weapon-swap", JSON.stringify(body));
+      console.log("Weapon swapped", body);
+    } else {
+      console.error("Socket is not connected");
+    }
+  }
+  
+  const fleeBattle = () => {
+    console.log('fleeing')
+    Alert.alert('¿Deseas intentar huir de la batalla?', "Solo podrás regresar si tus compañeros mueren.",[
+      {
+        text: "Cancelar",
+        onPress: () => console.log("Cancel pressed"),
+        style: "cancel"
+      },
+      {
+        text: 'Huir',
+        style:'destructive',
+        onPress:() => {
+          const randomNumber = Math.floor(Math.random() * 5) + 1;
+          console.log('RANDOM NUMBER')
+          if(randomNumber === 5 && socket) {
+            socket.emit("flee-battle", JSON.stringify(3));
+          } else {
+            Alert.alert('No pudiste huir', 'Severo caso de skill issue. Espera a la siguiente ronda.')
+          }
+        }
+      }
+    ])
+  }
+
   return {
     enemies,
     attacks,
     inventory,
     character,
     showAttackDrawer,
+    showWeaponDrawer,
     showAttacks,
+    showWeapons,
     sendAttack,
-    handleEnemyChange
+    handleEnemyChange,
+    changeWeapon,
+    fleeBattle
   };
 };
 
