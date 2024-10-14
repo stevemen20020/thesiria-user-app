@@ -17,6 +17,9 @@ const ViewModel = () => {
   const [currentObjective, setCurrentObjective] = useState(-1)
   const [currentObjectiveName, setCurrentObjectiveName] = useState('')
 
+  const [round, setRound] = useState(0)
+  const [interval, setInterval] = useState(0)
+
   const apiService = new ApiService();
 
   useEffect(() => {
@@ -46,6 +49,9 @@ const ViewModel = () => {
   const parseSocketInfo = (BATTLE) => {
     console.log('BATALIA', BATTLE)
 
+    setInterval(BATTLE.timer)
+    setRound(BATTLE.round)
+
     const characterIndex = BATTLE.players.findIndex(character => character.id === 3)
 
     setCharacter(BATTLE.players[characterIndex])
@@ -57,23 +63,15 @@ const ViewModel = () => {
             const index = BATTLE.npc_enemies.findIndex(npc => npc.id === attack.objective_ids);
             let atk = BATTLE.players[characterIndex].attacks.find(a => a.id === attack.attack_id);
             
-            // Crear una copia del ataque para evitar referencias mutables
-            atk = { ...atk };
-          
-            console.log('doing...', BATTLE.players[characterIndex].inventory_weapon_playable_character_weapon_idToinventory_weapon.weapon);
-            
-            // Asignar el arma al ataque copiado
+            atk = { ...atk };            
             atk.weapon = BATTLE.players[characterIndex].inventory_weapon_playable_character_weapon_idToinventory_weapon.weapon;
-            console.log('did');
           
             if (!BATTLE.npc_enemies[index].received_attacks) {
               BATTLE.npc_enemies[index].received_attacks = [];
             }
           
-            // Push del ataque clonado
             BATTLE.npc_enemies[index].received_attacks.push(atk);
           
-            console.log('ATTACKED', BATTLE.npc_enemies[index].received_attacks);
           }
         } else if(attack.attack_type === 2) { //IF THE ATTACK IS TO A MONSTER
           if(BATTLE.monsters.length > 0 && attack.objective_ids !== -1) {
@@ -204,6 +202,8 @@ const ViewModel = () => {
     character,
     showAttackDrawer,
     showWeaponDrawer,
+    round,
+    interval,
     showAttacks,
     showWeapons,
     sendAttack,

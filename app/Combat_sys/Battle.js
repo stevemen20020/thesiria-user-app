@@ -6,10 +6,11 @@ import Button_Panel from './Button_Panel'
 import Animated, { useDerivedValue, useSharedValue, useAnimatedStyle, withTiming, withRepeat } from 'react-native-reanimated'
 import Attack_Drawer from './Attack_Drawer'
 import Weapon_Drawer from './Weapon_Drawer'
+import Combat_Header from './Combat_Header'
 
 const Battle = () => {
 
-  const { enemies, character, showAttackDrawer, attacks, showWeaponDrawer, showWeapons, showAttacks, sendAttack, handleEnemyChange, changeWeapon, fleeBattle } = BattleViewModel()
+  const { enemies, character, showAttackDrawer, attacks, showWeaponDrawer, interval, round, showWeapons, showAttacks, sendAttack, handleEnemyChange, changeWeapon, fleeBattle } = BattleViewModel()
 
   const animation = useSharedValue(0)
   const rotation = useDerivedValue(() => {
@@ -46,6 +47,7 @@ const Battle = () => {
       <Enemy_Carousel enemyData={enemies} setCurrentObjective={(id, name) => handleEnemyChange(id, name)}/>
       {character !== null && (
         <>
+        <Combat_Header round={round} timer={interval}/>
         <Button_Panel character ={character} pressAttack={() => showAttacks()} pressWeapon={() => showWeapons()} pressFlee={() => fleeBattle()}/>
         <Attack_Drawer 
         show={showAttackDrawer} 
