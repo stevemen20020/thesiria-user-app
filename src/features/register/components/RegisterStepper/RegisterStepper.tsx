@@ -1,72 +1,66 @@
+import { useThemeStore } from "@/src/app-core/Store/themeStore";
+import GoBackButton from "@/src/shared/ui/Buttons/GoBackButton";
+import IconButton from "@/src/shared/ui/Buttons/IconButton/IconButton";
+import Feather from "@expo/vector-icons/Feather";
 import React from "react";
-import { Button, Dimensions, View } from "react-native";
-import Animated, {
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import { KeyboardAvoidingView, Platform, View } from "react-native";
+import Animated from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRegister } from "../../hooks/useRegister";
-import AffinityStep from "../AffinityStep/AffinityStep";
-import NameStep from "../NameStep/NameStep";
-import NegativeCharecteristicsStep from "../NegativeCharacteristicsStep/NegativeCharecteristicsStep";
-import PositiveCharacteristicsStep from "../PositiveCharacteristicsStep/PositiveCharacteristicsStep";
-import RaceStep from "../RaceStep/RaceStep";
-import SkillsStep from "../SkillsStep/SkillsStep";
-
-const SCREEN_WIDTH = Dimensions.get("window").width;
+import styles from "./Styles";
+import useViewModel from "./ViewModel";
 
 const RegisterStepper = () => {
-  const { stepIndex, nextStep } = useRegister();
-  const translateX = useSharedValue(0);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }],
-  }));
-
-  const Step = () => {
-    switch (stepIndex) {
-      case 0:
-        return <NameStep />;
-      case 1:
-        return <RaceStep />;
-      case 2:
-        return <AffinityStep />;
-      case 3:
-        return <PositiveCharacteristicsStep />;
-      case 4:
-        return <NegativeCharecteristicsStep />;
-      case 5:
-        return <SkillsStep />;
-      default:
-        return <NameStep />;
-    }
-  };
-
-  const goNext = () => {
-    // 1️⃣ Saca el step actual hacia la izquierda
-    translateX.value = withTiming(-SCREEN_WIDTH, { duration: 300 }, () => {
-      // 2️⃣ Cambia el step (en JS)
-      runOnJS(nextStep)();
-
-      // 3️⃣ Coloca el nuevo step fuera a la derecha
-      translateX.value = SCREEN_WIDTH;
-
-      // 4️⃣ Anímalo al centro
-      translateX.value = withTiming(0, { duration: 300 });
-    });
-  };
+  const { Step, animatedStyle, stepIndex, goNext, returnToLogin, goPrevious } =
+    useViewModel();
+  const colors = useThemeStore((state) => state.colors);
 
   return (
-    <SafeAreaView>
-      <View>
-        <Animated.View style={[animatedStyle]}>
-          <Step />
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={styles.mainContainer}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View style={styles.paddedContainer}>
+          <GoBackButton
+            onPress={returnToLogin}
+            icon={
+              <Feather name="arrow-left" size={24} color={colors.textPrimary} />
+            }
+          />
+        </View>
+
+        <Animated.View style={[styles.animatedContainer, animatedStyle]}>
+          {Step}
         </Animated.View>
 
-        <Button title="Go next" onPress={goNext} />
-      </View>
+        <View style={styles.bottomContainer}>
+          <IconButton
+            icon={
+              <Feather
+                name="arrow-left"
+                size={24}
+                color={stepIndex === 0 ? colors.disabled : colors.primary}
+              />
+            }
+            variant={stepIndex === 0 ? "ghost" : "outline"}
+            onPress={goPrevious}
+            text="REGRESAR"
+            disabled={stepIndex === 0 ? true : false}
+          />
+
+          <IconButton
+            icon={
+              <Feather
+                name="arrow-right"
+                size={24}
+                color={colors.textOnPrimary}
+              />
+            }
+            variant="filled"
+            onPress={goNext}
+          />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
