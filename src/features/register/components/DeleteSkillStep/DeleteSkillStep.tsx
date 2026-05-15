@@ -1,27 +1,31 @@
 import { useThemeStore } from "@/src/app-core/Store/themeStore";
-import IconButton from "@/src/shared/ui/Buttons/IconButton/IconButton";
 import BasicCard from "@/src/shared/ui/Cards/BasicCard/BasicCard";
 import MainText from "@/src/shared/ui/Text/MainText/MainText";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import React from "react";
 import { View } from "react-native";
+import { useRegister } from "../../hooks/useRegister";
 import { RolledStat } from "../../types/register.types";
 import styles from "./Styles";
-import useViewModel from "./ViewModel";
 
-const SkillsStep = () => {
-  const { statsArray, generateRandomNumber, setSkillIndex, pressNumber } =
-    useViewModel();
-
+const DeleteSkillStep = () => {
+  const { statsArray, deleteSkill } = useRegister();
   const colors = useThemeStore((state) => state.colors);
+
+  const defineLowestNumber = (index: number) => {
+    if (statsArray.length > 10) {
+      const values = statsArray.map((element: RolledStat) => element.value);
+      if (values[index] === Math.min(...values)) return colors.secondary;
+    }
+    return colors.background;
+  };
 
   return (
     <View style={styles.mainContainer}>
       <View style={styles.cardsContainer}>
-        {statsArray.map((element: RolledStat) => (
+        {statsArray.map((element: RolledStat, index: number) => (
           <BasicCard
             variant="outline"
-            style={{ width: 82 }}
+            style={{ width: 82, backgroundColor: defineLowestNumber(index) }}
             size="m"
             key={element.id}
             contentStyle={{
@@ -29,6 +33,9 @@ const SkillsStep = () => {
               alignItems: "center",
               justifyContent: "center",
             }}
+            onPress={
+              statsArray.length > 10 ? () => deleteSkill(index) : undefined
+            }
           >
             <MainText textAlign="center" size="xl">
               {element.value}
@@ -36,23 +43,9 @@ const SkillsStep = () => {
           </BasicCard>
         ))}
       </View>
-      <MainText variant="label">
-        Manten presionado para tirar un dado...
-      </MainText>
-      <IconButton
-        icon={
-          <FontAwesome5
-            name="dice-d20"
-            size={24}
-            color={statsArray.length < 11 ? "white" : colors.disabled}
-          />
-        }
-        onHold={() => generateRandomNumber()}
-        onPress={pressNumber}
-        disabled={statsArray.length >= 11}
-      />
+      <MainText variant="label">Selecciona un número para eliminarlo</MainText>
     </View>
   );
 };
 
-export default SkillsStep;
+export default DeleteSkillStep;

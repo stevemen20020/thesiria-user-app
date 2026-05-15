@@ -1,6 +1,6 @@
 import { useThemeStore } from "@/src/app-core/Store/themeStore";
 import { SPACING } from "@/src/shared/constants/Tokens";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -24,7 +24,11 @@ interface IconButtonProps extends PressableProps {
 
   loading?: boolean;
   disabled?: boolean;
+
   onPress?: () => void;
+  onHold?: () => void;
+  holdDelay?: number;
+  holdInterval?: number;
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -38,24 +42,60 @@ const IconButton = ({
   size = "m",
   loading = false,
   disabled = false,
+  onHold,
+  holdDelay = 400,
+  holdInterval = 100,
+
   ...props
 }: IconButtonProps) => {
   const colors = useThemeStore((state) => state.colors);
 
-  // 🔥 press animation
   const scale = useSharedValue(1);
+
+  const holdTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const holdIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
 
+  const clearHold = () => {
+    if (holdTimeoutRef.current) {
+      clearTimeout(holdTimeoutRef.current);
+      holdTimeoutRef.current = null;
+    }
+
+    if (holdIntervalRef.current) {
+      clearInterval(holdIntervalRef.current);
+      holdIntervalRef.current = null;
+    }
+  };
+
   const handlePressIn = () => {
     scale.value = withSpring(0.95);
+
+    if (!onHold || disabled) return;
+
+    holdTimeoutRef.current = setTimeout(() => {
+      onHold();
+
+      holdIntervalRef.current = setInterval(() => {
+        onHold();
+      }, holdInterval);
+    }, holdDelay);
   };
 
   const handlePressOut = () => {
     scale.value = withSpring(1);
+
+    clearHold();
   };
+
+  useEffect(() => {
+    return () => {
+      clearHold();
+    };
+  }, []);
 
   const getSizeStyle = (size: "s" | "m" | "l") => {
     switch (size) {
@@ -63,10 +103,12 @@ const IconButton = ({
         return {
           padding: SPACING.xxs,
         };
+
       case "l":
         return {
           padding: SPACING.s,
         };
+
       case "m":
       default:
         return {
@@ -141,13 +183,11 @@ const IconButton = ({
       style={[styles.base, sizeStyle, variantStyle, animatedStyle]}
       disabled={disabled}
       onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      {...props}
     >
-      <Animated.View
-        onTouchStart={handlePressIn}
-        onTouchEnd={handlePressOut}
-        {...props}
-        style={styles.inner}
-      >
+      <Animated.View style={styles.inner}>
         {loading ? (
           <ActivityIndicator color={colors.textOnPrimary} />
         ) : children ? (
@@ -155,7 +195,8 @@ const IconButton = ({
         ) : (
           <>
             {icon}
-            {text && <Text style={(styles.text, variantText)}>{text}</Text>}
+
+            {text && <Text style={[styles.text, variantText]}>{text}</Text>}
           </>
         )}
       </Animated.View>

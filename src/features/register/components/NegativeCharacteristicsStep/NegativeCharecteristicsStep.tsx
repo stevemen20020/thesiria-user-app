@@ -20,7 +20,7 @@ const NegativeCharecteristicsStep = () => {
       <MainInput
         value={character.negativeCharacteristic_1 ?? ""}
         onChange={(text: string) =>
-          setCharacterData({ negativeCharacteristic_2: text })
+          setCharacterData({ negativeCharacteristic_1: text })
         }
         variant="clear"
         placeholder="Le tiene fobia al color amarillo"

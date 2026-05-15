@@ -4,14 +4,22 @@ import IconButton from "@/src/shared/ui/Buttons/IconButton/IconButton";
 import Feather from "@expo/vector-icons/Feather";
 import React from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
+import * as Progress from "react-native-progress";
 import Animated from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./Styles";
 import useViewModel from "./ViewModel";
 
 const RegisterStepper = () => {
-  const { Step, animatedStyle, stepIndex, goNext, returnToLogin, goPrevious } =
-    useViewModel();
+  const {
+    Step,
+    animatedStyle,
+    stepIndex,
+    goNext,
+    returnToLogin,
+    goPrevious,
+    blockNextButton,
+  } = useViewModel();
   const colors = useThemeStore((state) => state.colors);
 
   return (
@@ -26,6 +34,15 @@ const RegisterStepper = () => {
             icon={
               <Feather name="arrow-left" size={24} color={colors.textPrimary} />
             }
+          />
+        </View>
+        <View style={styles.paddedContainer}>
+          <Progress.Bar
+            progress={stepIndex / 8}
+            animated={true}
+            color={colors.primary}
+            borderColor="transparent"
+            width={null}
           />
         </View>
 
@@ -53,11 +70,14 @@ const RegisterStepper = () => {
               <Feather
                 name="arrow-right"
                 size={24}
-                color={colors.textOnPrimary}
+                color={
+                  blockNextButton() ? colors.disabled : colors.textOnPrimary
+                }
               />
             }
             variant="filled"
             onPress={goNext}
+            disabled={blockNextButton()}
           />
         </View>
       </KeyboardAvoidingView>

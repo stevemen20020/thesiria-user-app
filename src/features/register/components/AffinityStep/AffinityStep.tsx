@@ -12,12 +12,12 @@ const AffinityStep = () => {
     <View style={styles.mainContainer}>
       <MainText variant="label">Seleccionemos una afinidad...</MainText>
       <MainSelect
-        value={character.idRace}
+        value={character.affinityId}
         onChange={(value: string | (string | number)[]) =>
-          setCharacterData({ idRace: String(value) })
+          setCharacterData({ affinityId: String(value) })
         }
         placeholder="Pyromania"
-        options={[]}
+        options={[{ value: 1, label: "Pyromania" }]}
       />
     </View>
   );

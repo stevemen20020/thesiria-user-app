@@ -1,50 +1,50 @@
 // Tokens.ts
 
 export const SPACING = {
-  xxxs: "0.25rem",
-  xxs: "0.5rem",
-  xs: "1rem",
-  s: "1.5rem",
-  m: "2rem",
-  l: "2.5rem",
-  xl: "3rem",
-  xxl: "3.5rem",
-  xxxl: "4rem",
+  xxxs: 2,
+  xxs: 4,
+  xs: 8,
+  s: 12,
+  m: 16,
+  l: 20,
+  xl: 24,
+  xxl: 28,
+  xxxl: 32,
 };
 
 export const RADIUS = {
-  xs: "0.25rem",
-  s: "0.5rem",
-  m: "0.75rem",
-  l: "1rem",
-  xl: "1.5rem",
-  round: "999rem",
+  xs: 2,
+  s: 4,
+  m: 6,
+  l: 8,
+  xl: 12,
+  round: 9999,
 };
 
 export const FONT_SIZE = {
-  xs: "0.75rem",
-  s: "0.875rem",
-  m: "1rem",
-  l: "1.25rem",
-  xl: "1.5rem",
-  xxl: "2rem",
-  xxxl: "2.5rem",
+  xs: 12,
+  s: 14,
+  m: 16,
+  l: 20,
+  xl: 24,
+  xxl: 32,
+  xxxl: 40,
 };
 
 export const FONT_WEIGHT = {
-  light: "300",
-  regular: "400",
-  medium: "500",
-  semibold: "600",
-  bold: "700",
+  light: "300" as const,
+  regular: "400" as const,
+  medium: "500" as const,
+  semibold: "600" as const,
+  bold: "700" as const,
 };
 
 export const LINE_HEIGHT = {
-  xs: "1rem",
-  s: "1.25rem",
-  m: "1.5rem",
-  l: "1.75rem",
-  xl: "2rem",
+  xs: 16,
+  s: 20,
+  m: 24,
+  l: 28,
+  xl: 32,
 };
 
 export const SHADOWS = {
@@ -55,6 +55,7 @@ export const SHADOWS = {
     shadowRadius: 2,
     elevation: 2,
   },
+
   m: {
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -62,6 +63,7 @@ export const SHADOWS = {
     shadowRadius: 4,
     elevation: 4,
   },
+
   l: {
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
@@ -87,9 +89,9 @@ export const OPACITY = {
 };
 
 export const ICON_SIZE = {
-  xs: "1rem",
-  s: "1.25rem",
-  m: "1.5rem",
-  l: "2rem",
-  xl: "2.5rem",
+  xs: 16,
+  s: 20,
+  m: 24,
+  l: 32,
+  xl: 40,
 };

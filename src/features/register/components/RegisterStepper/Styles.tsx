@@ -1,18 +1,17 @@
 import { SPACING } from "@/src/shared/constants/Tokens";
-import EStyleSheet from "react-native-extended-stylesheet";
+import { StyleSheet } from "react-native";
 
-const styles = EStyleSheet.create({
+const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     height: "100%",
-    gap: SPACING.s,
+    gap: SPACING.xxxl,
   },
 
   paddedContainer: {
     width: "100%",
     paddingHorizontal: SPACING.s,
     paddingTop: SPACING.l,
-    height: "10%",
   },
 
   // 🔥 This makes it expand
@@ -21,7 +20,6 @@ const styles = EStyleSheet.create({
     justifyContent: "flex-end",
   },
 
-  // 🔥 Floating button
   bottomContainer: {
     width: "100%",
     alignItems: "flex-end",
@@ -29,7 +27,7 @@ const styles = EStyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-end",
-    gap: SPACING.m,
+    gap: SPACING.l,
     paddingBottom: SPACING.xl,
   },
 });

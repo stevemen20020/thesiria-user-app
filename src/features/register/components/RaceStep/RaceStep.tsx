@@ -17,7 +17,7 @@ const RaceStep = () => {
           setCharacterData({ idRace: String(value) })
         }
         placeholder="Humano"
-        options={[]}
+        options={[{ value: 1, label: "Humano" }]}
       />
     </View>
   );
