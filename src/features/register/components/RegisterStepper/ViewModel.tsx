@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Dimensions } from "react-native";
 import {
   runOnJS,
@@ -8,25 +9,34 @@ import {
 import { useRegister } from "../../hooks/useRegister";
 import AffinityStep from "../AffinityStep/AffinityStep";
 import AssignSkillStep from "../AssignSkillStep/AssignSkillStep";
+import AwaitScreenStep from "../AwaitScreen/AwaitScreenStep";
 import DeleteSkillStep from "../DeleteSkillStep/DeleteSkillStep";
 import NameStep from "../NameStep/NameStep";
 import NegativeCharecteristicsStep from "../NegativeCharacteristicsStep/NegativeCharecteristicsStep";
 import PositiveCharacteristicsStep from "../PositiveCharacteristicsStep/PositiveCharacteristicsStep";
 import RaceStep from "../RaceStep/RaceStep";
 import SkillsStep from "../SkillsStep/SkillsStep";
+import UserRegisterStep from "../UserRegister/UserRegister";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const RegisterStepperViewModel = () => {
-  const { stepIndex, nextStep, prevStep, character, statsArray } =
+  const { stepIndex, nextStep, prevStep, character, user, statsArray } =
     useRegister();
   const translateX = useSharedValue(0);
+  const controlsOpacity = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
   }));
 
   let Step;
+
+  useEffect(() => {
+    controlsOpacity.value = withTiming(stepIndex === 9 ? 0 : 1, {
+      duration: 300,
+    });
+  }, [stepIndex]);
 
   switch (stepIndex) {
     case 0:
@@ -53,6 +63,12 @@ const RegisterStepperViewModel = () => {
     case 7:
       Step = <AssignSkillStep />;
       break;
+    case 8:
+      Step = <UserRegisterStep />;
+      break;
+    case 9:
+      Step = <AwaitScreenStep />;
+      break;
     default:
       Step = <NameStep />;
   }
@@ -66,6 +82,10 @@ const RegisterStepperViewModel = () => {
       translateX.value = withTiming(0, { duration: 300 });
     });
   };
+
+  const controlsAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: controlsOpacity.value,
+  }));
 
   const goPrevious = () => {
     translateX.value = withTiming(SCREEN_WIDTH, { duration: 300 }, () => {
@@ -95,17 +115,36 @@ const RegisterStepperViewModel = () => {
         return statsArray.length < 11 ? true : false;
       case 6:
         return statsArray.length < 10 ? true : false;
+      case 7:
+        if (
+          character.strength === "" ||
+          character.defense === "" ||
+          character.dexterity === "" ||
+          character.aim === "" ||
+          character.agility === "" ||
+          character.handcraft === "" ||
+          character.charisma === "" ||
+          character.wisdom === "" ||
+          character.speed === "" ||
+          character.vision === ""
+        )
+          return true;
+        else return false;
+      case 8:
+        if (user.email === "" || user.password === "") return true;
+        else return false;
       default:
         return false;
     }
   };
 
   return {
-    goNext,
     Step,
-    goPrevious,
     animatedStyle,
+    controlsAnimatedStyle,
     stepIndex,
+    goPrevious,
+    goNext,
     returnToLogin,
     blockNextButton,
   };

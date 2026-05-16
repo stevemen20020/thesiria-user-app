@@ -46,28 +46,7 @@ export const StatCard = ({ statKey, label }: Props) => {
   });
 
   const handleDrop = (data: DragData) => {
-    const incomingValue = data.value;
-
-    const currentValue = Number(character?.[statKey]);
-
-    const updatedCharacter = {
-      ...character,
-
-      [statKey]: incomingValue.toString(),
-    };
-
-    // swap automático
-    if (!isNaN(currentValue)) {
-      const previousStat = Object.entries(character).find(
-        ([_, val]) => Number(val) === incomingValue,
-      )?.[0] as StatKey | undefined;
-
-      if (previousStat) {
-        updatedCharacter[previousStat] = currentValue.toString();
-      }
-    }
-
-    setCharacterData(updatedCharacter);
+    setCharacterData({ [statKey]: data.value });
   };
 
   return (

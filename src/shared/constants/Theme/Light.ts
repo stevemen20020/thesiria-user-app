@@ -12,7 +12,7 @@ export const LIGHT_COLORS = {
 
   // Backgrounds
   background: PALETTE.WHITE,
-  surface: PALETTE.LIGHT_PINK,
+  surface: PALETTE.SUPER_LIGHT_PINK,
   surfaceAlt: PALETTE.LIGHT_BLUE,
 
   // Text

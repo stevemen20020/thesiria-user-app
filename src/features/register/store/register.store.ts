@@ -1,4 +1,4 @@
-import { PlayableCharacterEntity } from "@/src/shared/entities";
+import { PlayableCharacterEntity, UsersEntity } from "@/src/shared/entities";
 import { create } from "zustand";
 import { CardLayout, RolledStat, StatKey } from "../types/register.types";
 
@@ -14,6 +14,8 @@ type CharacterCreationState = {
   cardLayouts: Record<StatKey, CardLayout>;
   usedRolls: Record<StatKey, string>;
 
+  user: UsersEntity;
+
   setHoveredStat: (stat: StatKey | null) => void;
   setUsedRoll: (statKey: StatKey, rollId: string) => void;
 
@@ -22,6 +24,7 @@ type CharacterCreationState = {
   nextStep: () => void;
   prevStep: () => void;
   setCharacterData: (data: Partial<PlayableCharacterEntity>) => void;
+  setUserData: (data: Partial<UsersEntity>) => void;
   setStatsArray: (skillIndex: number, data: number) => void;
   deleteStat: (index: number) => void;
 };
@@ -68,11 +71,18 @@ export const useRegisterstore = create<CharacterCreationState>((set) => ({
     wisdom: "",
   },
 
+  user: {
+    email: "",
+    password: "",
+  },
+
   nextStep: () => set((state) => ({ stepIndex: state.stepIndex + 1 })),
   prevStep: () => set((state) => ({ stepIndex: state.stepIndex - 1 })),
 
   setCharacterData: (data) =>
     set((state) => ({ character: { ...state.character, ...data } })),
+
+  setUserData: (data) => set((state) => ({ user: { ...state.user, ...data } })),
 
   setStatsArray: (skillIndex: number, data: number) => {
     set((state) => {

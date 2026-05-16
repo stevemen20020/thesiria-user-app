@@ -2,8 +2,9 @@ import { useThemeStore } from "@/src/app-core/Store/themeStore";
 import GoBackButton from "@/src/shared/ui/Buttons/GoBackButton";
 import IconButton from "@/src/shared/ui/Buttons/IconButton/IconButton";
 import Feather from "@expo/vector-icons/Feather";
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { KeyboardAvoidingView, Platform, View } from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 import * as Progress from "react-native-progress";
 import Animated from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,6 +16,7 @@ const RegisterStepper = () => {
     Step,
     animatedStyle,
     stepIndex,
+    controlsAnimatedStyle,
     goNext,
     returnToLogin,
     goPrevious,
@@ -24,33 +26,84 @@ const RegisterStepper = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <View
+        style={{
+          ...StyleSheet.absoluteFillObject,
+          overflow: "hidden",
+        }}
+      >
+        <LinearGradient
+          colors={[colors.background, colors.surface]}
+          style={[StyleSheet.absoluteFill, { opacity: 1 }]}
+        />
+
+        <View
+          style={{
+            position: "absolute",
+            width: 250,
+            height: 250,
+            borderRadius: 999,
+            backgroundColor: colors.primary,
+            opacity: 0.08,
+            top: -80,
+            right: -60,
+          }}
+        />
+
+        <View
+          style={{
+            position: "absolute",
+            width: 180,
+            height: 180,
+            borderRadius: 999,
+            backgroundColor: colors.secondary,
+            opacity: 0.06,
+            bottom: 40,
+            left: -50,
+          }}
+        />
+
+        <View
+          style={{
+            position: "absolute",
+            width: 80,
+            height: 80,
+            borderRadius: 999,
+            backgroundColor: colors.primary,
+            opacity: 0.04,
+            top: "45%",
+            right: 30,
+          }}
+        />
+      </View>
+
       <KeyboardAvoidingView
         style={styles.mainContainer}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View style={styles.paddedContainer}>
+        <Animated.View style={[styles.paddedContainer, controlsAnimatedStyle]}>
           <GoBackButton
             onPress={returnToLogin}
             icon={
               <Feather name="arrow-left" size={24} color={colors.textPrimary} />
             }
           />
-        </View>
-        <View style={styles.paddedContainer}>
+        </Animated.View>
+        <Animated.View style={[styles.paddedContainer, controlsAnimatedStyle]}>
           <Progress.Bar
-            progress={stepIndex / 8}
+            progress={stepIndex / 9}
             animated={true}
             color={colors.primary}
             borderColor="transparent"
             width={null}
           />
-        </View>
+        </Animated.View>
 
         <Animated.View style={[styles.animatedContainer, animatedStyle]}>
           {Step}
         </Animated.View>
 
-        <View style={styles.bottomContainer}>
+        <Animated.View style={[styles.bottomContainer, controlsAnimatedStyle]}>
           <IconButton
             icon={
               <Feather
@@ -79,7 +132,7 @@ const RegisterStepper = () => {
             onPress={goNext}
             disabled={blockNextButton()}
           />
-        </View>
+        </Animated.View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

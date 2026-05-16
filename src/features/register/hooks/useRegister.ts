@@ -8,6 +8,7 @@ export function useRegister() {
   const hoveredStat = useRegisterstore((s) => s.hoveredStat);
   const cardLayouts = useRegisterstore((s) => s.cardLayouts);
   const usedRolls = useRegisterstore((s) => s.usedRolls);
+  const user = useRegisterstore((s) => s.user);
 
   const nextStep = useRegisterstore((s) => s.nextStep);
   const prevStep = useRegisterstore((s) => s.prevStep);
@@ -17,6 +18,7 @@ export function useRegister() {
   const setHoveredStat = useRegisterstore((s) => s.setHoveredStat);
   const setCardLayout = useRegisterstore((s) => s.setCardLayout);
   const setUsedRoll = useRegisterstore((s) => s.setUsedRoll);
+  const setUserData = useRegisterstore((s) => s.setUserData);
 
   return {
     stepIndex,
@@ -26,6 +28,7 @@ export function useRegister() {
     hoveredStat,
     cardLayouts,
     usedRolls,
+    user,
     nextStep,
     prevStep,
     setCharacterData,
@@ -34,5 +37,6 @@ export function useRegister() {
     setHoveredStat,
     setCardLayout,
     setUsedRoll,
+    setUserData,
   };
 }

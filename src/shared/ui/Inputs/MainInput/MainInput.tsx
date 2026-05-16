@@ -3,7 +3,6 @@ import Feather from "@expo/vector-icons/Feather";
 import React, { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import styles from "./styles";
-
 interface MainInputProps {
   value: string;
   onChange: (text: string) => void;
@@ -118,7 +117,7 @@ const MainInput = ({
             <Feather
               name={secure ? "eye-off" : "eye"}
               size={fontSize * 1.2}
-              color={colors.textSecondary}
+              color={colors.textPrimary}
             />
           </Pressable>
         ) : (
