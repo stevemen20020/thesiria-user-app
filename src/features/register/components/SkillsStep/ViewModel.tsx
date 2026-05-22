@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useRegister } from "../../hooks/useRegister";
+import { useRegisterStore } from "../../hooks/useRegisterStore";
 
 const ViewModel = () => {
   const [skillIndex, setSkillIndex] = useState<number>(0);
 
-  const { statsArray, setStatsArray } = useRegister();
+  const { statsArray, setStatsArray } = useRegisterStore();
 
   const generateRandomNumber = () => {
     const randomNumber = Math.floor(Math.random() * 20) + 1;

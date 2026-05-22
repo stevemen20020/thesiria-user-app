@@ -5,7 +5,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 import { DropProvider } from "react-native-reanimated-dnd";
 
-import { useRegister } from "../../hooks/useRegister";
+import { useRegisterStore } from "../../hooks/useRegisterStore";
 
 import { StatCard } from "../StatCard/StatCard";
 import { StatPill } from "../StatPill/StatPill";
@@ -17,7 +17,7 @@ import MainText from "@/src/shared/ui/Text/MainText/MainText";
 import styles from "./Styles";
 
 const AssignSkillStep = () => {
-  const { statsArray, usedRolls } = useRegister();
+  const { statsArray, usedRolls } = useRegisterStore();
 
   const usedRollIds = Object.values(usedRolls);
 

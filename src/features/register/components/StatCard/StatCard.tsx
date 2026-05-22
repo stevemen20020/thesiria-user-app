@@ -14,7 +14,7 @@ import { useThemeStore } from "@/src/app-core/Store/themeStore";
 
 import MainText from "@/src/shared/ui/Text/MainText/MainText";
 
-import { useRegister } from "../../hooks/useRegister";
+import { useRegisterStore } from "../../hooks/useRegisterStore";
 import { StatKey } from "../../types/register.types";
 
 type Props = {
@@ -29,7 +29,7 @@ type DragData = {
 export const StatCard = ({ statKey, label }: Props) => {
   const colors = useThemeStore((state) => state.colors);
 
-  const { character, setCharacterData } = useRegister();
+  const { character, setCharacterData } = useRegisterStore();
 
   const scale = useSharedValue(1);
 

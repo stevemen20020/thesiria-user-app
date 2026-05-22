@@ -3,12 +3,12 @@ import BasicCard from "@/src/shared/ui/Cards/BasicCard/BasicCard";
 import MainText from "@/src/shared/ui/Text/MainText/MainText";
 import React from "react";
 import { View } from "react-native";
-import { useRegister } from "../../hooks/useRegister";
+import { useRegisterStore } from "../../hooks/useRegisterStore";
 import { RolledStat } from "../../types/register.types";
 import styles from "./Styles";
 
 const DeleteSkillStep = () => {
-  const { statsArray, deleteSkill } = useRegister();
+  const { statsArray, deleteSkill } = useRegisterStore();
   const colors = useThemeStore((state) => state.colors);
 
   const defineLowestNumber = (index: number) => {

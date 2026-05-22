@@ -4,11 +4,11 @@ import MainText from "@/src/shared/ui/Text/MainText/MainText";
 import Feather from "@expo/vector-icons/Feather";
 import React from "react";
 import { View } from "react-native";
-import { useRegister } from "../../hooks/useRegister";
+import { useRegisterStore } from "../../hooks/useRegisterStore";
 import styles from "./Styles";
 
 const NameStep = () => {
-  const { character, setCharacterData } = useRegister();
+  const { character, setCharacterData } = useRegisterStore();
 
   const colors = useThemeStore((state) => state.colors);
 

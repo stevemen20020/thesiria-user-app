@@ -29,7 +29,7 @@ type CharacterCreationState = {
   deleteStat: (index: number) => void;
 };
 
-export const useRegisterstore = create<CharacterCreationState>((set) => ({
+export const Registerstore = create<CharacterCreationState>((set) => ({
   stepIndex: 0,
   totalSteps: 0,
 

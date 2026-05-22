@@ -1,42 +1,46 @@
-import { useRegisterstore } from "../store/register.store";
+import { PlayableCharacterEntity, UsersEntity } from "@/src/shared/entities";
+import { UsersWithTokenEntity } from "@/src/shared/entities/users/usersWithTokenEntity";
+import { useAuthStore } from "@/src/shared/hooks/useAuthStore";
+import { usePlayableCharacterStore } from "@/src/shared/hooks/usePlayableCharacterStore";
+import { useMutation } from "@tanstack/react-query";
+import { registerUser } from "../api/register.api";
 
-export function useRegister() {
-  const stepIndex = useRegisterstore((s) => s.stepIndex);
-  const totalSteps = useRegisterstore((s) => s.totalSteps);
-  const character = useRegisterstore((s) => s.character);
-  const statsArray = useRegisterstore((s) => s.statsArray);
-  const hoveredStat = useRegisterstore((s) => s.hoveredStat);
-  const cardLayouts = useRegisterstore((s) => s.cardLayouts);
-  const usedRolls = useRegisterstore((s) => s.usedRolls);
-  const user = useRegisterstore((s) => s.user);
+type RegisterMutationProps = {
+  user: UsersEntity;
+  character: PlayableCharacterEntity;
+};
 
-  const nextStep = useRegisterstore((s) => s.nextStep);
-  const prevStep = useRegisterstore((s) => s.prevStep);
-  const setCharacterData = useRegisterstore((s) => s.setCharacterData);
-  const setStatsArray = useRegisterstore((s) => s.setStatsArray);
-  const deleteSkill = useRegisterstore((s) => s.deleteStat);
-  const setHoveredStat = useRegisterstore((s) => s.setHoveredStat);
-  const setCardLayout = useRegisterstore((s) => s.setCardLayout);
-  const setUsedRoll = useRegisterstore((s) => s.setUsedRoll);
-  const setUserData = useRegisterstore((s) => s.setUserData);
+export const useRegister = () => {
+  const { setAuth } = useAuthStore();
+  const { setCharacterData } = usePlayableCharacterStore();
+
+  const mutation = useMutation<
+    UsersWithTokenEntity,
+    Error,
+    RegisterMutationProps
+  >({
+    mutationFn: async ({ user, character }) => {
+      const response = await registerUser(user, character);
+
+      if (response.status !== "success" || !response.result.playableCharacter) {
+        throw new Error("REGISTER_FAILED");
+      }
+
+      return response.result;
+    },
+
+    onSuccess: (data) => {
+      setAuth(data.user, data.token, data.token);
+
+      setCharacterData(data.playableCharacter ?? {});
+    },
+  });
 
   return {
-    stepIndex,
-    totalSteps,
-    character,
-    statsArray,
-    hoveredStat,
-    cardLayouts,
-    usedRolls,
-    user,
-    nextStep,
-    prevStep,
-    setCharacterData,
-    setStatsArray,
-    deleteSkill,
-    setHoveredStat,
-    setCardLayout,
-    setUsedRoll,
-    setUserData,
+    registerAndLogin: mutation.mutateAsync,
+
+    isPending: mutation.isPending,
+    error: mutation.error,
+    isSuccess: mutation.isSuccess,
   };
-}
+};

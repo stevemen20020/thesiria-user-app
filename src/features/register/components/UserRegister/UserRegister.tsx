@@ -5,11 +5,11 @@ import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React from "react";
 import { View } from "react-native";
-import { useRegister } from "../../hooks/useRegister";
+import { useRegisterStore } from "../../hooks/useRegisterStore";
 import styles from "./Styles";
 
 const UserRegisterStep = () => {
-  const { user, setUserData } = useRegister();
+  const { user, setUserData } = useRegisterStore();
 
   const colors = useThemeStore((state) => state.colors);
 

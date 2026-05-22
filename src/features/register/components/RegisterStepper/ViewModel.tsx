@@ -7,6 +7,7 @@ import {
   withTiming,
 } from "react-native-reanimated";
 import { useRegister } from "../../hooks/useRegister";
+import { useRegisterStore } from "../../hooks/useRegisterStore";
 import AffinityStep from "../AffinityStep/AffinityStep";
 import AssignSkillStep from "../AssignSkillStep/AssignSkillStep";
 import AwaitScreenStep from "../AwaitScreen/AwaitScreenStep";
@@ -22,7 +23,8 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const RegisterStepperViewModel = () => {
   const { stepIndex, nextStep, prevStep, character, user, statsArray } =
-    useRegister();
+    useRegisterStore();
+  const { registerAndLogin, error, isSuccess } = useRegister();
   const translateX = useSharedValue(0);
   const controlsOpacity = useSharedValue(1);
 
@@ -36,6 +38,8 @@ const RegisterStepperViewModel = () => {
     controlsOpacity.value = withTiming(stepIndex === 9 ? 0 : 1, {
       duration: 300,
     });
+
+    if (stepIndex === 9) submitForm();
   }, [stepIndex]);
 
   switch (stepIndex) {
@@ -137,6 +141,12 @@ const RegisterStepperViewModel = () => {
         return false;
     }
   };
+
+  const submitForm = () => {
+    registerAndLogin({ user, character });
+  };
+
+  if (isSuccess) console.log("TODO: CREATE WELCOME TO THESIRIA SCREEN");
 
   return {
     Step,
