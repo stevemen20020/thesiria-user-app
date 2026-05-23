@@ -15,8 +15,6 @@ const ViewModel = () => {
       }))
     : [];
 
-  console.log("RACE-DATA", raceData, raceError);
-
   return { parsedRaces };
 };
 

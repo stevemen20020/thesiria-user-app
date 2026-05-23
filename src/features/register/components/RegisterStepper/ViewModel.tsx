@@ -1,3 +1,5 @@
+import { PlayableCharacterEntity } from "@/src/shared/entities";
+import { router } from "expo-router";
 import { useEffect } from "react";
 import { Dimensions } from "react-native";
 import {
@@ -24,7 +26,7 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const RegisterStepperViewModel = () => {
   const { stepIndex, nextStep, prevStep, character, user, statsArray } =
     useRegisterStore();
-  const { registerAndLogin, error, isSuccess } = useRegister();
+  const { registerAndLogin, isPending, isSuccess } = useRegister();
   const translateX = useSharedValue(0);
   const controlsOpacity = useSharedValue(1);
 
@@ -39,8 +41,16 @@ const RegisterStepperViewModel = () => {
       duration: 300,
     });
 
-    if (stepIndex === 9) submitForm();
+    if (stepIndex === 9 && !isPending && !isSuccess) {
+      submitForm();
+    }
   }, [stepIndex]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.replace("/welcome");
+    }
+  }, [isSuccess]);
 
   switch (stepIndex) {
     case 0:
@@ -78,13 +88,23 @@ const RegisterStepperViewModel = () => {
   }
 
   const goNext = () => {
-    translateX.value = withTiming(-SCREEN_WIDTH, { duration: 300 }, () => {
-      runOnJS(nextStep)();
+    translateX.value = withTiming(
+      -SCREEN_WIDTH,
+      { duration: 300 },
+      (finished) => {
+        if (finished) {
+          runOnJS(handleNextStep)();
+        }
+      },
+    );
+  };
 
-      translateX.value = SCREEN_WIDTH;
+  const handleNextStep = () => {
+    nextStep();
 
-      translateX.value = withTiming(0, { duration: 300 });
-    });
+    translateX.value = SCREEN_WIDTH;
+
+    translateX.value = withTiming(0, { duration: 300 });
   };
 
   const controlsAnimatedStyle = useAnimatedStyle(() => ({
@@ -92,11 +112,23 @@ const RegisterStepperViewModel = () => {
   }));
 
   const goPrevious = () => {
-    translateX.value = withTiming(SCREEN_WIDTH, { duration: 300 }, () => {
-      runOnJS(prevStep)();
-      translateX.value = -SCREEN_WIDTH;
-      translateX.value = withTiming(0, { duration: 300 });
-    });
+    translateX.value = withTiming(
+      SCREEN_WIDTH,
+      { duration: 300 },
+      (finished) => {
+        if (finished) {
+          runOnJS(handleNextStep)();
+        }
+      },
+    );
+  };
+
+  const handlePreviousStep = () => {
+    prevStep();
+
+    translateX.value = -SCREEN_WIDTH;
+
+    translateX.value = withTiming(0, { duration: 300 });
   };
 
   const returnToLogin = () => {
@@ -143,10 +175,22 @@ const RegisterStepperViewModel = () => {
   };
 
   const submitForm = () => {
-    registerAndLogin({ user, character });
+    console.log(user, character);
+    const castedCharacter: PlayableCharacterEntity = {
+      ...character,
+      strength: character.strength.toString(),
+      dexterity: character.dexterity.toString(),
+      aim: character.aim.toString(),
+      wisdom: character.wisdom.toString(),
+      defense: character.defense.toString(),
+      speed: character.speed.toString(),
+      agility: character.agility.toString(),
+      charisma: character.charisma.toString(),
+      handcraft: character.handcraft.toString(),
+      vision: character.vision.toString(),
+    };
+    registerAndLogin({ user, character: castedCharacter });
   };
-
-  if (isSuccess) console.log("TODO: CREATE WELCOME TO THESIRIA SCREEN");
 
   return {
     Step,

@@ -13,7 +13,7 @@ export const registerUser = async (
   playableCharacter: PlayableCharacterEntity,
 ): Promise<ApiResponse<UsersWithTokenEntity>> => {
   return apiClient.post<ApiResponse<UsersWithTokenEntity>>(
-    "auth/register",
+    "auth",
     {
       user,
       playableCharacter,
