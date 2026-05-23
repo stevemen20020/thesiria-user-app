@@ -1,20 +1,46 @@
-import { useRegisterstore } from "../store/register.store";
+import { PlayableCharacterEntity, UsersEntity } from "@/src/shared/entities";
+import { UsersWithTokenEntity } from "@/src/shared/entities/users/usersWithTokenEntity";
+import { useAuthStore } from "@/src/shared/hooks/useAuthStore";
+import { usePlayableCharacterStore } from "@/src/shared/hooks/usePlayableCharacterStore";
+import { useMutation } from "@tanstack/react-query";
+import { registerUser } from "../api/register.api";
 
-export function useRegister() {
-  const stepIndex = useRegisterstore((s) => s.stepIndex);
-  const totalSteps = useRegisterstore((s) => s.totalSteps);
-  const character = useRegisterstore((s) => s.character);
+type RegisterMutationProps = {
+  user: UsersEntity;
+  character: PlayableCharacterEntity;
+};
 
-  const nextStep = useRegisterstore((s) => s.nextStep);
-  const prevStep = useRegisterstore((s) => s.prevStep);
-  const setCharacterData = useRegisterstore((s) => s.setCharacterData);
+export const useRegister = () => {
+  const { setAuth } = useAuthStore();
+  const { setCharacterData } = usePlayableCharacterStore();
+
+  const mutation = useMutation<
+    UsersWithTokenEntity,
+    Error,
+    RegisterMutationProps
+  >({
+    mutationFn: async ({ user, character }) => {
+      const response = await registerUser(user, character);
+
+      if (response.status !== "success" || !response.result.playableCharacter) {
+        throw new Error("REGISTER_FAILED");
+      }
+
+      return response.result;
+    },
+
+    onSuccess: (data) => {
+      setAuth(data.user, data.token, data.token);
+
+      setCharacterData(data.playableCharacter ?? {});
+    },
+  });
 
   return {
-    stepIndex,
-    totalSteps,
-    character,
-    nextStep,
-    prevStep,
-    setCharacterData,
+    registerAndLogin: mutation.mutateAsync,
+
+    isPending: mutation.isPending,
+    error: mutation.error,
+    isSuccess: mutation.isSuccess,
   };
-}
+};

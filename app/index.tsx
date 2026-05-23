@@ -1,10 +1,8 @@
-import { useAuth } from "@/src/features/login/hooks/useAuth";
+import { useAuthStore } from "@/src/shared/hooks/useAuthStore";
 import { Redirect } from "expo-router";
 
 export default function Index() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { accessToken } = useAuthStore();
 
-  if (isLoading) return null;
-
-  return <Redirect href={isAuthenticated ? "/map" : "/register"} />;
+  return <Redirect href={accessToken ? "/map" : "/register"} />;
 }
