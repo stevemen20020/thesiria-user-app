@@ -175,7 +175,6 @@ const RegisterStepperViewModel = () => {
   };
 
   const submitForm = () => {
-    console.log(user, character);
     const castedCharacter: PlayableCharacterEntity = {
       ...character,
       strength: character.strength.toString(),
