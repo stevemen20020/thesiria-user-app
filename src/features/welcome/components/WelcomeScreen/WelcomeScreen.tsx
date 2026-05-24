@@ -5,7 +5,7 @@ import styles from "./Styles";
 import useViewModel from "./ViewModel";
 
 const WelcomeScreen = () => {
-  const { opacity, translateY, messageIndex, messages } = useViewModel();
+  const { opacity, messageIndex, messages } = useViewModel();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -13,7 +13,6 @@ const WelcomeScreen = () => {
         <Animated.View
           style={{
             opacity,
-            transform: [{ translateY }],
           }}
         >
           <MainText>{messages[messageIndex]}</MainText>

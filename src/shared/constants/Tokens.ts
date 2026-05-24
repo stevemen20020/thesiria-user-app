@@ -18,6 +18,8 @@ export const RADIUS = {
   m: 6,
   l: 8,
   xl: 12,
+  xxl: 16,
+  xxxl: 24,
   round: 9999,
 };
 

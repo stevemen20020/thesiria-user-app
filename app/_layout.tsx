@@ -5,21 +5,25 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { DropProvider } from "react-native-reanimated-dnd";
+import Toast from "react-native-toast-message";
 
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView>
-      <QueryClientProvider client={queryClient}>
-        <DropProvider>
-          <BookLoaderOverlay />
-          <ThemeInitializer />
-          <Stack
-            screenOptions={{
-              headerShown: false,
-            }}
-          />
-        </DropProvider>
-      </QueryClientProvider>
-    </GestureHandlerRootView>
+    <>
+      <GestureHandlerRootView>
+        <QueryClientProvider client={queryClient}>
+          <DropProvider>
+            <BookLoaderOverlay />
+            <ThemeInitializer />
+            <Stack
+              screenOptions={{
+                headerShown: false,
+              }}
+            />
+          </DropProvider>
+        </QueryClientProvider>
+      </GestureHandlerRootView>
+      <Toast />
+    </>
   );
 }

@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { Animated, Easing } from "react-native";
 
 const ANIMATION_DURATION = 800;
-const WAIT_DURATION = 4200;
+const WAIT_DURATION = 3200;
 
 const ViewModel = () => {
   const { character } = usePlayableCharacterStore();
 
   const messages = [
-    "Bienvenido",
+    "Bienvenido/a",
     character.name !== "" ? character.name : "Aventurero",
     "A Thesiria",
     "Has estado soñando",
@@ -25,14 +25,13 @@ const ViewModel = () => {
     "¿A quebrantar el orden natural de las cosas?",
     "Thesiria se alzará sobre el mar",
     "Lejos",
-    "Bienvenido",
+    "Bienvenido/a",
     character.name !== "" ? character.name : "Aventurero",
   ];
 
   const [messageIndex, setMessageIndex] = useState(0);
 
   const opacity = useRef(new Animated.Value(1)).current;
-  const translateY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (messageIndex >= messages.length) {
@@ -50,13 +49,6 @@ const ViewModel = () => {
           easing: Easing.out(Easing.ease),
           useNativeDriver: true,
         }),
-
-        Animated.timing(translateY, {
-          toValue: -10,
-          duration: ANIMATION_DURATION,
-          easing: Easing.out(Easing.ease),
-          useNativeDriver: true,
-        }),
       ]),
     ]);
 
@@ -69,20 +61,12 @@ const ViewModel = () => {
       }
 
       opacity.setValue(0);
-      translateY.setValue(10);
 
       setMessageIndex(nextIndex);
 
       Animated.parallel([
         Animated.timing(opacity, {
           toValue: 1,
-          duration: ANIMATION_DURATION,
-          easing: Easing.out(Easing.ease),
-          useNativeDriver: true,
-        }),
-
-        Animated.timing(translateY, {
-          toValue: 0,
           duration: ANIMATION_DURATION,
           easing: Easing.out(Easing.ease),
           useNativeDriver: true,
@@ -97,7 +81,6 @@ const ViewModel = () => {
 
   return {
     opacity,
-    translateY,
     messageIndex,
     messages,
   };

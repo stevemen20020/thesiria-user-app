@@ -1,13 +1,16 @@
-import { useEffect } from "react";
-
 import { Loader } from "@/src/app-core/Store/loaderStore";
 
-export const useGlobalLoader = (message?: string) => {
-  useEffect(() => {
+export const useGlobalLoader = () => {
+  const showLoader = (message?: string) => {
     Loader.show(message);
+  };
 
-    return () => {
-      Loader.hide();
-    };
-  }, [message]);
+  const hideLoader = () => {
+    Loader.hide();
+  };
+
+  return {
+    showLoader,
+    hideLoader,
+  };
 };

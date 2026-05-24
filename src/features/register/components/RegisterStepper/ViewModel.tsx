@@ -117,7 +117,7 @@ const RegisterStepperViewModel = () => {
       { duration: 300 },
       (finished) => {
         if (finished) {
-          runOnJS(handleNextStep)();
+          runOnJS(handlePreviousStep)();
         }
       },
     );
@@ -132,7 +132,7 @@ const RegisterStepperViewModel = () => {
   };
 
   const returnToLogin = () => {
-    console.log("RETURNING...");
+    router.back();
   };
 
   const blockNextButton = (): boolean => {

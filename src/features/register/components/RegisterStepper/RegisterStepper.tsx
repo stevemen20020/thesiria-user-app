@@ -1,10 +1,10 @@
 import { useThemeStore } from "@/src/app-core/Store/themeStore";
+import MainFadedBackground from "@/src/shared/ui/Backgrounds/MainFadedBackground/MainFadedBackground";
 import GoBackButton from "@/src/shared/ui/Buttons/GoBackButton";
 import IconButton from "@/src/shared/ui/Buttons/IconButton/IconButton";
 import Feather from "@expo/vector-icons/Feather";
-import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
+import { KeyboardAvoidingView, Platform } from "react-native";
 import * as Progress from "react-native-progress";
 import Animated from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -26,56 +26,7 @@ const RegisterStepper = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View
-        style={{
-          ...StyleSheet.absoluteFillObject,
-          overflow: "hidden",
-        }}
-      >
-        <LinearGradient
-          colors={[colors.background, colors.surface]}
-          style={[StyleSheet.absoluteFill, { opacity: 1 }]}
-        />
-
-        <View
-          style={{
-            position: "absolute",
-            width: 250,
-            height: 250,
-            borderRadius: 999,
-            backgroundColor: colors.primary,
-            opacity: 0.08,
-            top: -80,
-            right: -60,
-          }}
-        />
-
-        <View
-          style={{
-            position: "absolute",
-            width: 180,
-            height: 180,
-            borderRadius: 999,
-            backgroundColor: colors.secondary,
-            opacity: 0.06,
-            bottom: 40,
-            left: -50,
-          }}
-        />
-
-        <View
-          style={{
-            position: "absolute",
-            width: 80,
-            height: 80,
-            borderRadius: 999,
-            backgroundColor: colors.primary,
-            opacity: 0.04,
-            top: "45%",
-            right: 30,
-          }}
-        />
-      </View>
+      <MainFadedBackground />
 
       <KeyboardAvoidingView
         style={styles.mainContainer}
