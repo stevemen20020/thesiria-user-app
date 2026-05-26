@@ -1,4 +1,5 @@
 import { useThemeStore } from "@/src/app-core/Store/themeStore";
+import { Z_INDEX } from "@/src/shared/constants/Tokens";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { StyleSheet, View } from "react-native";
@@ -10,6 +11,7 @@ const MainFadedBackground = () => {
       style={{
         ...StyleSheet.absoluteFillObject,
         overflow: "hidden",
+        zIndex: Z_INDEX.base,
       }}
     >
       <LinearGradient
