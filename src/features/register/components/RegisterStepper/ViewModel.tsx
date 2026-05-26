@@ -1,4 +1,5 @@
 import { PlayableCharacterEntity } from "@/src/shared/entities";
+import { useGlobalLoader } from "@/src/shared/hooks/UseGlobalLoader";
 import { router } from "expo-router";
 import { useEffect } from "react";
 import { Dimensions } from "react-native";
@@ -27,6 +28,8 @@ const RegisterStepperViewModel = () => {
   const { stepIndex, nextStep, prevStep, character, user, statsArray } =
     useRegisterStore();
   const { registerAndLogin, isPending, isSuccess } = useRegister();
+  const { showLoader, hideLoader } = useGlobalLoader();
+
   const translateX = useSharedValue(0);
   const controlsOpacity = useSharedValue(1);
 
@@ -48,9 +51,20 @@ const RegisterStepperViewModel = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      router.replace("/welcome");
+      hideLoader();
+      requestAnimationFrame(() => {
+        router.replace("/welcome");
+      });
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (isPending) {
+      showLoader();
+    } else {
+      hideLoader();
+    }
+  }, [isPending]);
 
   switch (stepIndex) {
     case 0:
