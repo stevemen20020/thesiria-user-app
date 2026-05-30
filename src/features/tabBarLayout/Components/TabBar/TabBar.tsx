@@ -1,3 +1,5 @@
+// TabBar.config.tsx
+
 import { useThemeStore } from "@/src/app-core/Store/themeStore";
 import {
   ICON_SIZE,
@@ -5,20 +7,23 @@ import {
   SPACING,
   Z_INDEX,
 } from "@/src/shared/constants/Tokens";
+
 import Feather from "@expo/vector-icons/Feather";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+
 import { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
-import { Tabs } from "expo-router";
 import { View } from "react-native";
 
-const TabBar = () => {
+export const useTabBarConfig = () => {
   const colors = useThemeStore((state) => state.colors);
 
   const screenOptions: BottomTabNavigationOptions = {
     tabBarShowLabel: true,
     headerShown: false,
+
     tabBarActiveTintColor: colors.primaryStrong,
     tabBarInactiveTintColor: colors.dark_border,
+
     tabBarStyle: {
       position: "absolute",
       bottom: SPACING.xxl,
@@ -33,62 +38,45 @@ const TabBar = () => {
     },
   };
 
-  return (
-    <Tabs screenOptions={screenOptions}>
-      <Tabs.Screen
-        name="map"
-        options={{
-          tabBarIcon: ({ color }) => {
-            return <Feather name="map" size={ICON_SIZE.m} color={color} />;
-          },
-          tabBarLabel: "Mapa",
-        }}
-      />
+  return {
+    screenOptions,
 
-      <Tabs.Screen
-        name="character"
-        options={{
-          tabBarIcon: ({ color }) => {
-            return <Feather name="user" size={ICON_SIZE.m} color={color} />;
-          },
-          tabBarLabel: "Personaje",
-        }}
-      />
+    screens: {
+      map: {
+        tabBarIcon: ({ color }: any) => (
+          <Feather name="map" size={ICON_SIZE.m} color={color} />
+        ),
+        tabBarLabel: "Mapa",
+      },
 
-      <Tabs.Screen
-        name="dummy"
-        options={{
-          tabBarButton: () => <View style={{ width: 70 }} />,
-        }}
-      />
+      character: {
+        tabBarIcon: ({ color }: any) => (
+          <Feather name="user" size={ICON_SIZE.m} color={color} />
+        ),
+        tabBarLabel: "Personaje",
+      },
 
-      <Tabs.Screen
-        name="journal"
-        options={{
-          tabBarIcon: ({ color }) => {
-            return <Feather name="book" size={ICON_SIZE.m} color={color} />;
-          },
-          tabBarLabel: "Diario",
-        }}
-      />
+      dummy: {
+        tabBarButton: () => <View style={{ width: 70 }} />,
+      },
 
-      <Tabs.Screen
-        name="attacks"
-        options={{
-          tabBarIcon: ({ color }) => {
-            return (
-              <MaterialCommunityIcons
-                name="sword"
-                size={ICON_SIZE.m}
-                color={color}
-              />
-            );
-          },
-          tabBarLabel: "Ataques",
-        }}
-      />
-    </Tabs>
-  );
+      journal: {
+        tabBarIcon: ({ color }: any) => (
+          <Feather name="book" size={ICON_SIZE.m} color={color} />
+        ),
+        tabBarLabel: "Diario",
+      },
+
+      attacks: {
+        tabBarIcon: ({ color }: any) => (
+          <MaterialCommunityIcons
+            name="sword"
+            size={ICON_SIZE.m}
+            color={color}
+          />
+        ),
+        tabBarLabel: "Ataques",
+      },
+    },
+  };
 };
-
-export default TabBar;

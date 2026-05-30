@@ -47,7 +47,7 @@ const AppHeader = () => {
         },
       ]}
     >
-      <HeaderBackground transparent={transparent} />
+      <HeaderBackground transparent={false} />
 
       <View style={styles.content}>
         <Text

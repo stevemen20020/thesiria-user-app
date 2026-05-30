@@ -1,12 +1,8 @@
+import MapView from "@/src/features/map/components/MapView/MapView";
 import React from "react";
-import { Text, View } from "react-native";
 
 const map = () => {
-  return (
-    <View>
-      <Text>map</Text>
-    </View>
-  );
+  return <MapView />;
 };
 
 export default map;

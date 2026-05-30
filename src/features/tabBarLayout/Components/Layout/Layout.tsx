@@ -2,17 +2,21 @@ import MainFadedBackground from "@/src/shared/ui/Backgrounds/MainFadedBackground
 import React from "react";
 import AppHeader from "../AppHeader/AppHeader";
 import DiceButton from "../DiceButton/DiceButton";
-import TabBar from "../TabBar/TabBar";
 
-const Layout = () => {
+type Props = React.PropsWithChildren;
+
+const GameLayout = ({ children }: Props) => {
   return (
     <>
-      <AppHeader />
-      <TabBar />
-      <DiceButton />
       <MainFadedBackground />
+
+      <AppHeader />
+
+      {children}
+
+      <DiceButton />
     </>
   );
 };
 
-export default Layout;
+export default GameLayout;

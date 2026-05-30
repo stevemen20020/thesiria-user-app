@@ -1,4 +1,4 @@
-import { useAuthStore } from "../../store/auth/Auth.store";
+import { AuthStore } from "../../store/auth/Auth.store";
 
 const BASE_URL =
   process.env.EXPO_PUBLIC_API_URL || "http://localhost:8000/api/v1";
@@ -25,7 +25,7 @@ class APIClient {
     }
 
     if (!options?.skipAuth) {
-      const token = useAuthStore.getState().accessToken;
+      const token = AuthStore.getState().accessToken;
 
       if (token) {
         headers["Authorization"] = `Bearer ${token}`;
@@ -43,7 +43,7 @@ class APIClient {
     this.isRefreshing = true;
     this.refreshPromise = (async () => {
       try {
-        const state = useAuthStore.getState();
+        const state = AuthStore.getState();
         const refreshToken = state.refreshToken;
 
         if (!refreshToken) {
@@ -70,7 +70,7 @@ class APIClient {
 
         return newAccessToken;
       } catch (error) {
-        useAuthStore.getState().clearAuth();
+        AuthStore.getState().clearAuth();
         // window.location.href = "/login";
         throw error;
       } finally {
@@ -86,7 +86,6 @@ class APIClient {
     const url = `${this.baseURL}${endpoint}`;
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
-
     try {
       const config: RequestInit = {
         ...options,
