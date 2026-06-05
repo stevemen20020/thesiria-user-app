@@ -129,6 +129,7 @@ class APIClient {
 
       return response.json();
     } catch (error: any) {
+      console.error(error);
       if (error?.name === "AbortError") {
         throw {
           status: 504,
@@ -178,7 +179,7 @@ class APIClient {
     return formData;
   }
 
-  get<T>(endpoint: string, options?: RequestOptions): Promise<T> {
+  get<T>(endpoint: string, options?: RequestOptions | any): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: "GET" });
   }
 

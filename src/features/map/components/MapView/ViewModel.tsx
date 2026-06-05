@@ -5,16 +5,19 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { Image } from "react-native";
 import { getMapTiles } from "../../api/ map.api";
+import { useMapStore } from "../../hooks/useMapStore";
 
 const ViewModel = () => {
   const { showLoader, hideLoader } = useGlobalLoader();
   const [tileDimensions, setTileDimensions] = useState({ width: 0, height: 0 });
+  const { mapId } = useMapStore();
 
   const { data: mapTiles, isPending: mapTilesLoading } = useQuery<
     ApiResponse<TilesEntity[]>
   >({
-    queryKey: ["map-tiles"],
-    queryFn: getMapTiles,
+    queryKey: ["map-tiles", mapId],
+    queryFn: () => getMapTiles(mapId),
+    enabled: !!mapId,
   });
 
   const parsedTiles = useMemo(() => {

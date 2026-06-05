@@ -10,7 +10,7 @@ const MapView = () => {
   const ROWS = 5;
 
   if (!isReady) {
-    return <View style={{ flex: 1, backgroundColor: "red" }} />;
+    return <View style={{ flex: 1, backgroundColor: "transparent" }} />;
   }
 
   return (
