@@ -117,7 +117,6 @@ export const LeafletWebView: React.FC<LeafletWebViewProps> = ({
         style={{ flex: 1, backgroundColor: "black" }}
         onMessage={(event) => {
           const data = JSON.parse(event.nativeEvent.data);
-          console.log("MESSAGE FROM MAP:", data);
         }}
       />
     </View>

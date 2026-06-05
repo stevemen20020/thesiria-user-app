@@ -1,4 +1,4 @@
-import { TilesEntity } from "@/src/shared/entities";
+import { StructuresEntity, TilesEntity } from "@/src/shared/entities";
 import { apiClient } from "@/src/shared/services/api/client";
 import { ApiResponse } from "@/src/shared/types/Api.types";
 
@@ -13,5 +13,13 @@ export const getMapTiles = async (
 
   return apiClient.get<ApiResponse<TilesEntity[]>>(
     `tiles?${params.toString()}`,
+  );
+};
+
+export const getStructure = async (
+  structureId: string,
+): Promise<ApiResponse<StructuresEntity>> => {
+  return apiClient.get<ApiResponse<StructuresEntity>>(
+    `structures/${structureId}`,
   );
 };

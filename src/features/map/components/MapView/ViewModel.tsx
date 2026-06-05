@@ -1,10 +1,10 @@
-import { TilesEntity } from "@/src/shared/entities";
+import { StructuresEntity, TilesEntity } from "@/src/shared/entities";
 import { useGlobalLoader } from "@/src/shared/hooks/UseGlobalLoader";
 import { ApiResponse } from "@/src/shared/types/Api.types";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { Image } from "react-native";
-import { getMapTiles } from "../../api/ map.api";
+import { getMapTiles, getStructure } from "../../api/ map.api";
 import { useMapStore } from "../../hooks/useMapStore";
 
 const ViewModel = () => {
@@ -20,11 +20,33 @@ const ViewModel = () => {
     enabled: !!mapId,
   });
 
+  const { data: mapInfo, isPending: mapInfoLoading } = useQuery<
+    ApiResponse<StructuresEntity>
+  >({
+    queryKey: ["map-info", mapId],
+    queryFn: () => getStructure(mapId),
+    enabled: !!mapId,
+  });
+
   const parsedTiles = useMemo(() => {
     return mapTiles
       ? mapTiles.result.map((element: TilesEntity) => element.image)
       : [];
   }, [mapTiles]);
+
+  const parsedMapInfo = useMemo(() => {
+    const mapDimensions = mapInfo
+      ? {
+          width: mapInfo.result.horizontalTiles
+            ? Number(mapInfo.result.horizontalTiles)
+            : 0,
+          height: mapInfo.result.verticalTiles
+            ? Number(mapInfo.result.verticalTiles)
+            : 0,
+        }
+      : { width: 0, height: 0 };
+    return mapDimensions;
+  }, [mapInfo]);
 
   useEffect(() => {
     if (parsedTiles.length > 0 && tileDimensions.width === 0) {
@@ -47,7 +69,7 @@ const ViewModel = () => {
     const isCalculatingDimensions =
       parsedTiles.length > 0 && tileDimensions.width === 0;
 
-    if (mapTilesLoading || isCalculatingDimensions) {
+    if (mapTilesLoading || isCalculatingDimensions || mapInfoLoading) {
       showLoader();
     } else {
       hideLoader();
@@ -65,6 +87,7 @@ const ViewModel = () => {
     tileWidth: tileDimensions.width,
     tileHeight: tileDimensions.height,
     isReady: !mapTilesLoading && tileDimensions.width > 0,
+    parsedMapInfo,
   };
 };
 

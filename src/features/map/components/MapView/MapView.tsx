@@ -4,10 +4,8 @@ import { LeafletWebView } from "../LeafletView/LeafletView";
 import useViewModel from "./ViewModel";
 
 const MapView = () => {
-  const { parsedTiles, tileWidth, tileHeight, isReady } = useViewModel();
-
-  const COLUMNS = 5;
-  const ROWS = 5;
+  const { parsedTiles, tileWidth, tileHeight, isReady, parsedMapInfo } =
+    useViewModel();
 
   if (!isReady) {
     return <View style={{ flex: 1, backgroundColor: "transparent" }} />;
@@ -17,8 +15,8 @@ const MapView = () => {
     <View style={{ flex: 1 }}>
       <LeafletWebView
         tiles={parsedTiles}
-        cols={COLUMNS}
-        rows={ROWS}
+        cols={parsedMapInfo.width}
+        rows={parsedMapInfo.height}
         tileWidth={tileWidth}
         tileHeight={tileHeight}
       />

@@ -1,4 +1,5 @@
 import { useThemeStore } from "@/src/app-core/Store/themeStore";
+import { useAuthStore } from "@/src/shared/hooks/useAuthStore";
 import { usePlayableCharacterStore } from "@/src/shared/hooks/usePlayableCharacterStore";
 import { usePathname } from "expo-router";
 import React from "react";
@@ -18,6 +19,7 @@ const TITLES: Record<string, string> = {
 
 const AppHeader = () => {
   const { character } = usePlayableCharacterStore();
+  const { logOut } = useAuthStore();
 
   const pathname = usePathname();
 
@@ -62,7 +64,7 @@ const AppHeader = () => {
         </Text>
 
         <Pressable
-          onPress={() => console.log("YENDO A PROFILE")}
+          onPress={logOut}
           style={({ pressed }) => [
             styles.avatarButton,
             {
