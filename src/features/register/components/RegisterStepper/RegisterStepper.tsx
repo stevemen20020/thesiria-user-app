@@ -13,14 +13,13 @@ import useViewModel from "./ViewModel";
 
 const RegisterStepper = () => {
   const {
-    Step,
+    CurrentStep,
     animatedStyle,
     stepIndex,
     controlsAnimatedStyle,
-    goNext,
+    validateAndGoNext,
     returnToLogin,
     goPrevious,
-    blockNextButton,
   } = useViewModel();
   const colors = useThemeStore((state) => state.colors);
 
@@ -51,7 +50,7 @@ const RegisterStepper = () => {
         </Animated.View>
 
         <Animated.View style={[styles.animatedContainer, animatedStyle]}>
-          {Step}
+          <CurrentStep />
         </Animated.View>
 
         <Animated.View style={[styles.bottomContainer, controlsAnimatedStyle]}>
@@ -74,14 +73,11 @@ const RegisterStepper = () => {
               <Feather
                 name="arrow-right"
                 size={24}
-                color={
-                  blockNextButton() ? colors.disabled : colors.textOnPrimary
-                }
+                color={colors.textOnPrimary}
               />
             }
             variant="filled"
-            onPress={goNext}
-            disabled={blockNextButton()}
+            onPress={validateAndGoNext}
           />
         </Animated.View>
       </KeyboardAvoidingView>

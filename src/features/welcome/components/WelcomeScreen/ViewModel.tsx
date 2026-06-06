@@ -14,19 +14,15 @@ const ViewModel = () => {
     character.name !== "" ? character.name : "Aventurero",
     "A Thesiria",
     "Has estado soñando",
-    "Dioses, monstruos, el dragón",
-    "Y esa serpiente que te susurra en tu muñeca",
-    "Sí... Eres uno de ellos",
-    "Y aguardas antes de despertar",
+    "Esa serpiente que te susurra en tu muñeca",
     "¿Qué clase de vida traerás a esta isla?",
-    "Los cielos no estarán felices",
-    "Pues tú harás temblar la tierra",
     "¿En verdad estás dispuesto a desafiar al más allá?",
     "¿A quebrantar el orden natural de las cosas?",
     "Thesiria se alzará sobre el mar",
     "Lejos",
     "Bienvenido/a",
     character.name !== "" ? character.name : "Aventurero",
+    "A Thesiria",
   ];
 
   const [messageIndex, setMessageIndex] = useState(0);

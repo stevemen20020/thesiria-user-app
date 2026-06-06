@@ -1,3 +1,4 @@
+import { FONT_SIZE } from "@/src/shared/constants/Tokens";
 import { StyleSheet } from "react-native";
 
 export const createStyles = (colors: any) =>
@@ -97,5 +98,8 @@ export const createStyles = (colors: any) =>
       color: colors.primary,
       fontSize: 16,
       fontWeight: "600",
+    },
+    error: {
+      fontSize: FONT_SIZE.xs,
     },
   });

@@ -4,12 +4,15 @@ import MainText from "@/src/shared/ui/Text/MainText/MainText";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import { View } from "react-native";
-import { useRegisterStore } from "../../hooks/useRegisterStore";
 import styles from "./Styles";
 
 const UserRegisterStep = () => {
-  const { user, setUserData } = useRegisterStore();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
 
   const colors = useThemeStore((state) => state.colors);
 
@@ -18,22 +21,42 @@ const UserRegisterStep = () => {
       <MainText variant="label">
         Finalmente, hay que crear una cuenta...
       </MainText>
-      <MainInput
-        value={user.email}
-        onChange={(text: string) => setUserData({ email: text })}
-        variant="clear"
-        placeholder="example@user.com"
-        leftIcon={<Feather name="user" size={24} color={colors.dark_border} />}
+      <Controller
+        control={control}
+        name="email"
+        render={({ field: { onChange, value } }) => (
+          <MainInput
+            value={value}
+            onChange={onChange}
+            variant="clear"
+            placeholder="example@user.com"
+            leftIcon={
+              <Feather name="user" size={24} color={colors.dark_border} />
+            }
+            error={errors.email?.message?.toString()}
+          />
+        )}
       />
-      <MainInput
-        value={user.password}
-        onChange={(text: string) => setUserData({ password: text })}
-        variant="clear"
-        placeholder="Woowiiiwooooo i am a password"
-        leftIcon={
-          <Ionicons name="key-outline" size={24} color={colors.dark_border} />
-        }
-        isPassword={true}
+      <Controller
+        control={control}
+        name="password"
+        render={({ field: { onChange, value } }) => (
+          <MainInput
+            value={value}
+            onChange={onChange}
+            variant="clear"
+            placeholder="Woowiiiwooooo i am a password"
+            leftIcon={
+              <Ionicons
+                name="key-outline"
+                size={24}
+                color={colors.dark_border}
+              />
+            }
+            isPassword={true}
+            error={errors.password?.message?.toString()}
+          />
+        )}
       />
     </View>
   );

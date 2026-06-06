@@ -26,6 +26,7 @@ interface SelectProps {
   appearance?: "dark" | "light";
   multiple?: boolean;
   style?: any;
+  errors?: string;
 }
 
 export const MainSelect = ({
@@ -38,6 +39,7 @@ export const MainSelect = ({
   appearance = "light",
   multiple = false,
   style,
+  errors,
 }: SelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -126,92 +128,99 @@ export const MainSelect = ({
   }
 
   return (
-    <View style={[styles.wrapper, style]}>
-      <TouchableOpacity
-        activeOpacity={0.8}
-        disabled={disabled}
-        onPress={() => setIsOpen(true)}
-        style={[
-          styles.trigger,
-          {
-            borderColor: isError ? colors.error : currentTheme.border,
-          },
-          disabled && styles.disabled,
-        ]}
-      >
-        <View style={styles.selectedDisplay}>
-          {selectedValues.length > 0 ? (
-            <View style={styles.pill}>
-              <Text style={styles.pillText}>
-                {selectedValues.length} selected
+    <>
+      <View style={[styles.wrapper, style]}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          disabled={disabled}
+          onPress={() => setIsOpen(true)}
+          style={[
+            styles.trigger,
+            {
+              borderColor: isError ? colors.error : currentTheme.border,
+            },
+            disabled && styles.disabled,
+          ]}
+        >
+          <View style={styles.selectedDisplay}>
+            {selectedValues.length > 0 ? (
+              <View style={styles.pill}>
+                <Text style={styles.pillText}>
+                  {selectedValues.length} selected
+                </Text>
+              </View>
+            ) : (
+              <Text
+                numberOfLines={1}
+                style={[
+                  styles.placeholderText,
+                  { color: currentTheme.placeholder },
+                ]}
+              >
+                {placeholder}
               </Text>
-            </View>
-          ) : (
-            <Text
-              numberOfLines={1}
+            )}
+          </View>
+
+          <Text style={styles.chevron}>▼</Text>
+        </TouchableOpacity>
+
+        <Modal
+          visible={isOpen}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setIsOpen(false)}
+        >
+          <Pressable style={styles.overlay} onPress={() => setIsOpen(false)}>
+            <Pressable
               style={[
-                styles.placeholderText,
-                { color: currentTheme.placeholder },
+                styles.dropdown,
+                {
+                  borderColor: currentTheme.border,
+                },
               ]}
             >
-              {placeholder}
-            </Text>
-          )}
-        </View>
+              <ScrollView>
+                {options.map((option) => {
+                  const selected = isSelected(option.value);
 
-        <Text style={styles.chevron}>▼</Text>
-      </TouchableOpacity>
-
-      <Modal
-        visible={isOpen}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setIsOpen(false)}
-      >
-        <Pressable style={styles.overlay} onPress={() => setIsOpen(false)}>
-          <Pressable
-            style={[
-              styles.dropdown,
-              {
-                borderColor: currentTheme.border,
-              },
-            ]}
-          >
-            <ScrollView>
-              {options.map((option) => {
-                const selected = isSelected(option.value);
-
-                return (
-                  <TouchableOpacity
-                    key={String(option.value)}
-                    onPress={() => handleOptionClick(option.value)}
-                    style={[styles.option, selected && styles.selectedOption]}
-                  >
-                    <Text
-                      style={[
-                        styles.optionText,
-                        {
-                          color: selected ? colors.primary : currentTheme.color,
-                        },
-                      ]}
+                  return (
+                    <TouchableOpacity
+                      key={String(option.value)}
+                      onPress={() => handleOptionClick(option.value)}
+                      style={[styles.option, selected && styles.selectedOption]}
                     >
-                      {option.label}
-                    </Text>
-                    {selected && <Text style={styles.checkIcon}>✓</Text>}
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
+                      <Text
+                        style={[
+                          styles.optionText,
+                          {
+                            color: selected
+                              ? colors.primary
+                              : currentTheme.color,
+                          },
+                        ]}
+                      >
+                        {option.label}
+                      </Text>
+                      {selected && <Text style={styles.checkIcon}>✓</Text>}
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
 
-            <TouchableOpacity
-              onPress={() => setIsOpen(false)}
-              style={styles.doneButton}
-            >
-              <Text style={styles.doneButtonText}>Done</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setIsOpen(false)}
+                style={styles.doneButton}
+              >
+                <Text style={styles.doneButtonText}>Done</Text>
+              </TouchableOpacity>
+            </Pressable>
           </Pressable>
-        </Pressable>
-      </Modal>
-    </View>
+        </Modal>
+      </View>
+      {errors && (
+        <Text style={[styles.error, { color: colors.error }]}>{errors}</Text>
+      )}
+    </>
   );
 };

@@ -3,12 +3,15 @@ import MainInput from "@/src/shared/ui/Inputs/MainInput/MainInput";
 import MainText from "@/src/shared/ui/Text/MainText/MainText";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import React from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import { View } from "react-native";
-import { useRegisterStore } from "../../hooks/useRegisterStore";
 import styles from "./Styles";
 
 const PositiveCharacteristicsStep = () => {
-  const { character, setCharacterData } = useRegisterStore();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
 
   const colors = useThemeStore((state) => state.colors);
 
@@ -18,41 +21,68 @@ const PositiveCharacteristicsStep = () => {
         Escribe una caracteristica positiva de tu personaje
       </MainText>
 
-      <MainInput
-        value={character.positiveCharacteristic_1 ?? ""}
-        onChange={(text: string) =>
-          setCharacterData({ positiveCharacteristic_1: text })
-        }
-        variant="clear"
-        placeholder="Es extremadamente amable"
-        leftIcon={
-          <AntDesign name="check-circle" size={24} color={colors.dark_border} />
-        }
+      <Controller
+        control={control}
+        name="positiveCharacteristic_1"
+        render={({ field: { onChange, value } }) => (
+          <MainInput
+            value={value}
+            onChange={onChange}
+            variant="clear"
+            placeholder="Es extremadamente amable"
+            leftIcon={
+              <AntDesign
+                name="check-circle"
+                size={24}
+                color={colors.dark_border}
+              />
+            }
+            error={errors.positiveCharacteristic_1?.message?.toString()}
+          />
+        )}
       />
       <MainText variant="label">
         (Escoge dos compañeros para que escriban las siguientes dos)
       </MainText>
-      <MainInput
-        value={character.positiveCharacteristic_2 ?? ""}
-        onChange={(text: string) =>
-          setCharacterData({ positiveCharacteristic_2: text })
-        }
-        variant="clear"
-        placeholder="Gusta de adoptar gatos perdidos"
-        leftIcon={
-          <AntDesign name="check-circle" size={24} color={colors.dark_border} />
-        }
+      <Controller
+        control={control}
+        name="positiveCharacteristic_2"
+        render={({ field: { onChange, value } }) => (
+          <MainInput
+            value={value}
+            onChange={onChange}
+            variant="clear"
+            placeholder="Tiene un gran talento para cantar"
+            leftIcon={
+              <AntDesign
+                name="check-circle"
+                size={24}
+                color={colors.dark_border}
+              />
+            }
+            error={errors.positiveCharacteristic_2?.message?.toString()}
+          />
+        )}
       />
-      <MainInput
-        value={character.positiveCharacteristic_3 ?? ""}
-        onChange={(text: string) =>
-          setCharacterData({ positiveCharacteristic_3: text })
-        }
-        variant="clear"
-        placeholder="Por mas que lo intente, no le pueden oler las patas"
-        leftIcon={
-          <AntDesign name="check-circle" size={24} color={colors.dark_border} />
-        }
+      <Controller
+        control={control}
+        name="positiveCharacteristic_3"
+        render={({ field: { onChange, value } }) => (
+          <MainInput
+            value={value}
+            onChange={onChange}
+            variant="clear"
+            placeholder="Caga muy regularmente"
+            leftIcon={
+              <AntDesign
+                name="check-circle"
+                size={24}
+                color={colors.dark_border}
+              />
+            }
+            error={errors.positiveCharacteristic_3?.message?.toString()}
+          />
+        )}
       />
     </View>
   );

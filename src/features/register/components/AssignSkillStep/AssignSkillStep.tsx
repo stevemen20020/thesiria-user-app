@@ -28,7 +28,6 @@ const AssignSkillStep = () => {
   return (
     <DropProvider>
       <View style={[styles.container, { flex: 1 }]}>
-        {/* Contenedor horizontal de las píldoras */}
         <View style={{ paddingVertical: 12 }}>
           <ScrollView
             horizontal
@@ -41,10 +40,9 @@ const AssignSkillStep = () => {
           </ScrollView>
         </View>
 
-        {/* Contenedor vertical de las tarjetas de estadísticas */}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 40 }} // Espacio extra al final para poder hacer scroll cómodo
+          contentContainerStyle={{ paddingBottom: 40 }}
         >
           <View
             style={{

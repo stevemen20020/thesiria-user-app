@@ -5,7 +5,7 @@ import { usePlayableCharacterStore } from "@/src/shared/hooks/usePlayableCharact
 import { useMutation } from "@tanstack/react-query";
 import { registerUser } from "../api/register.api";
 
-type RegisterMutationProps = {
+export type RegisterMutationProps = {
   user: UsersEntity;
   character: PlayableCharacterEntity;
 };
