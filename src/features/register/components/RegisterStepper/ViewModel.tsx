@@ -8,6 +8,7 @@ import {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import Toast from "react-native-toast-message";
 import {
   mapRegisterFormToCharacter,
   mapRegisterFormToUser,
@@ -39,7 +40,7 @@ const RegisterStepperViewModel = () => {
     setCharacterData,
     setUserData,
   } = useRegisterStore();
-  const { registerAndLogin, isPending, isSuccess } = useRegister();
+  const { registerAndLogin, isPending, isSuccess, error } = useRegister();
   const { showLoader, hideLoader } = useGlobalLoader();
   const methods = useFormContext();
 
@@ -61,21 +62,27 @@ const RegisterStepperViewModel = () => {
   }, [stepIndex]);
 
   useEffect(() => {
-    if (isSuccess) {
-      hideLoader();
-      requestAnimationFrame(() => {
-        router.replace("/welcome");
-      });
-    }
-  }, [isSuccess]);
-
-  useEffect(() => {
     if (isPending) {
       showLoader();
     } else {
       hideLoader();
     }
-  }, [isPending]);
+
+    if (isSuccess) {
+      requestAnimationFrame(() => {
+        router.replace("/welcome");
+      });
+    }
+
+    if (error) {
+      handlePreviousStep();
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error.message,
+      });
+    }
+  }, [isPending, isSuccess]);
 
   const steps = [
     NameStep,
@@ -108,12 +115,6 @@ const RegisterStepperViewModel = () => {
 
     const newCharacter = mapRegisterFormToCharacter(values);
     const newUser = mapRegisterFormToUser(values);
-
-    console.log(
-      "NEW",
-      JSON.stringify(newCharacter, null, 4),
-      JSON.stringify(newUser, null, 4),
-    );
 
     setCharacterData(newCharacter);
     setUserData(newUser);
@@ -162,11 +163,6 @@ const RegisterStepperViewModel = () => {
   };
 
   const submitForm = () => {
-    console.log(
-      "DATA SENT",
-      JSON.stringify(user, null, 4),
-      JSON.stringify(character, null, 4),
-    );
     registerAndLogin({ user, character });
   };
 
